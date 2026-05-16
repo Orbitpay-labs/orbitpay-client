@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OrbitPay Kit</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Primary">
+        <a class="brand" href="#overview" aria-label="OrbitPay Kit home">
+          <span class="brand-mark" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="none">
+              <path d="M 144 256 L 27.598 256 L 144 139.598 Z M 256 207.5 L 200 256 L 200 56 L 0 56 L 48 0 L 256 0 Z M 0 204.402 L 0 112 L 92.402 112 Z" fill="currentColor"></path>
+            </svg>
+          </span>
+          <span>
+            <strong>OrbitPay Kit</strong>
+            <small>C-address payments</small>
+          </span>
+        </a>
+
+        <nav class="nav-list">
+          <button class="nav-item active" data-view="overview">
+            <span>01</span>
+            <strong>Overview</strong>
+          </button>
+          <button class="nav-item" data-view="funding">
+            <span>02</span>
+            <strong>Funding flow</strong>
+          </button>
+          <button class="nav-item" data-view="checkout">
+            <span>03</span>
+            <strong>Checkout</strong>
+          </button>
+          <button class="nav-item" data-view="sdk">
+            <span>04</span>
+            <strong>Developer kit</strong>
+          </button>
+        </nav>
+      </aside>
+
+      <main>
+        <header class="hero">
+          <div class="hero-copy">
+            <p class="eyebrow">Stellar payment infrastructure</p>
+            <h1>Checkout and funding flows for Soroban smart accounts.</h1>
+            <p class="lede">
+              OrbitPay Kit turns C-address funding into a clean product experience with payment links,
+              wallet routes, checkout intents, and status tracking for Stellar apps.
+            </p>
+            <div class="hero-actions">
+              <button class="primary-button" id="newSession">Create funding session</button>
+              <button class="ghost-button" data-view-link="checkout">Preview checkout</button>
+            </div>
+          </div>
+        </header>
+
+        <section class="view active" id="overview">
+          <div class="overview-grid">
+            <section class="panel route-panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="eyebrow">Core user flow</p>
+                  <h2>G-address to C-address funding</h2>
+                </div>
+                <span class="pill">Demo flow</span>
+              </div>
+
+              <div class="address-flow" aria-label="Address funding route">
+                <div class="address-node">
+                  <small>Starts from</small>
+                  <strong>GCF3...Y2RZ</strong>
+                  <span>User wallet or exchange</span>
+                </div>
+                <div class="flow-rail" aria-hidden="true">
+                  <span></span>
+                </div>
+                <div class="address-node smart">
+                  <small>Funds</small>
+                  <strong>CC4V...N9QP</strong>
+                  <span>Soroban smart account</span>
+                </div>
+              </div>
+
+              <div class="funding-form">
+                <label>
+                  Asset
+                  <select id="assetSelect">
+                    <option>USDC</option>
+                    <option>XLM</option>
+                    <option>EURC</option>
+                  </select>
+                </label>
+                <label>
+                  Amount
+                  <input id="amountInput" value="45.00" inputmode="decimal" />
+                </label>
+                <button class="primary-button compact" id="simulateFunding">Simulate funding</button>
+              </div>
+
+              <div class="result-strip" id="fundingResult">
+                Ready to create a testnet funding session.
+              </div>
+            </section>
+
+            <section class="panel checkout-preview">
+              <div class="panel-heading">
+                <div>
+                  <p class="eyebrow">Payment surface</p>
+                  <h2>Checkout preview</h2>
+                </div>
+                <span class="pill subtle">USDC</span>
+              </div>
+
+              <div class="checkout-card" aria-label="Checkout preview">
+                <div class="checkout-header">
+                  <div class="merchant-logo">A</div>
+                  <div>
+                    <strong>Atlas Studio</strong>
+                    <span>Invoice OP-1042</span>
+                  </div>
+                </div>
+                <div class="amount-display">
+                  <span>Total due</span>
+                  <strong id="checkoutAmount">$45.00</strong>
+                </div>
+                <div class="qr-art" aria-hidden="true">
+                  <span></span><span></span><span></span><span></span>
+                  <span></span><span></span><span></span><span></span>
+                  <span></span><span></span><span></span><span></span>
+                  <span></span><span></span><span></span><span></span>
+                </div>
+                <button class="pay-button">Pay with Stellar</button>
+              </div>
+            </section>
+
+            <section class="panel product-panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="eyebrow">Product layer</p>
+                  <h2>Everything an app needs to accept and route Stellar payments.</h2>
+                </div>
+              </div>
+              <div class="product-columns">
+                <article>
+                  <strong>Payment links</strong>
+                  <span>Create clean checkout routes for invoices, merchants, and app funding flows.</span>
+                </article>
+                <article>
+                  <strong>Funding sessions</strong>
+                  <span>Guide users from G-address wallets or exchanges into C-address smart accounts.</span>
+                </article>
+                <article>
+                  <strong>Status updates</strong>
+                  <span>Track payment state and return settlement updates to the merchant app.</span>
+                </article>
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <section class="view" id="funding">
+          <div class="two-column">
+            <section class="panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="eyebrow">Session builder</p>
+                  <h2>Create a funding route</h2>
+                </div>
+              </div>
+              <div class="field-stack">
+                <label>
+                  Destination C-address
+                  <input value="CC4VBD5EBGTEJQ7YAHU3MVP7SP2JNCQX6M6NPVZV4LQWF3N9QP" />
+                </label>
+                <label>
+                  User starts from
+                  <select>
+                    <option>Existing Stellar wallet</option>
+                    <option>Centralized exchange withdrawal</option>
+                    <option>Merchant checkout</option>
+                  </select>
+                </label>
+                <label>
+                  Settlement asset
+                  <select>
+                    <option>USDC</option>
+                    <option>XLM</option>
+                    <option>EURC</option>
+                  </select>
+                </label>
+              </div>
+            </section>
+            <section class="panel system-map">
+              <div class="map-frame" aria-hidden="true">
+                <div class="map-node source">G</div>
+                <div class="map-node api">API</div>
+                <div class="map-node contract">C</div>
+                <div class="map-line one"></div>
+                <div class="map-line two"></div>
+              </div>
+              <div>
+                  <p class="eyebrow">Payment route</p>
+                  <h2>Wallet, payment link, and contract state in one flow.</h2>
+                  <p class="panel-copy">
+                    A merchant creates an intent, the user funds with USDC or XLM, and the app
+                    receives a clear settlement state when the payment completes.
+                  </p>
+                </div>
+              </section>
+          </div>
+        </section>
+
+        <section class="view" id="checkout">
+          <div class="two-column">
+            <section class="panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="eyebrow">Payment intent</p>
+                  <h2>Create checkout link</h2>
+                </div>
+              </div>
+              <div class="field-stack">
+                <label>
+                  Merchant
+                  <input id="merchantInput" value="Atlas Studio" />
+                </label>
+                <label>
+                  Invoice
+                  <input id="invoiceInput" value="OP-1042" />
+                </label>
+                <label>
+                  Amount
+                  <input id="checkoutInput" value="45.00" />
+                </label>
+                <button class="primary-button" id="createIntent">Create intent</button>
+              </div>
+            </section>
+            <section class="panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="eyebrow">Shareable route</p>
+                  <h2>Payment link</h2>
+                </div>
+              </div>
+              <div class="link-box" id="paymentLink">https://pay.orbitkit.dev/i/op-1042</div>
+              <div class="result-strip success" id="intentResult">Intent ready for demo.</div>
+            </section>
+          </div>
+        </section>
+
+        <section class="view" id="sdk">
+          <div class="two-column">
+            <section class="panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="eyebrow">Developer kit</p>
+                  <h2>SDK preview</h2>
+                </div>
+              </div>
+              <pre class="code-block"><code>import { OrbitPay } from "@orbitpay/sdk";
+
+const session = await OrbitPay.createFundingSession({
+  network: "testnet",
+  destination: "CC4V...N9QP",
+  asset: "USDC",
+  amount: "45.00",
+  successUrl: "https://merchant.app/paid"
+});</code></pre>
+            </section>
+            <section class="panel backlog-panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="eyebrow">Integration surface</p>
+                  <h2>Use the pieces together or separately.</h2>
+                </div>
+              </div>
+              <ul class="feature-list">
+                <li><span>01</span> Hosted checkout for invoices and deposits</li>
+                <li><span>02</span> Payment intent API for app backends</li>
+                <li><span>03</span> C-address funding session builder</li>
+                <li><span>04</span> Webhook-style settlement callbacks</li>
+                <li><span>05</span> Soroban-ready contract intent model</li>
+                <li><span>06</span> Testnet-first developer workflow</li>
+              </ul>
+            </section>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
