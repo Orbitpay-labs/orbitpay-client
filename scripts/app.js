@@ -92,4 +92,3 @@ getElement("createIntent").addEventListener("click", async () => {
 getElement("newSession").addEventListener("click", () => {
     showView("funding");
 });
-

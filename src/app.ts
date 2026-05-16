@@ -5,13 +5,6 @@ interface DemoState {
   lastIntent: string;
 }
 
-interface ApiFallbackPayload {
-  id?: string;
-  network?: string;
-  status?: string;
-  [key: string]: unknown;
-}
-
 interface FundingSessionResponse {
   id: string;
   network: string;
@@ -79,7 +72,7 @@ function formatMoney(value: string): string {
   }).format(Number.isFinite(numeric) ? numeric : 0);
 }
 
-async function postJson<T extends ApiFallbackPayload>(
+async function postJson<T>(
   path: string,
   payload: Record<string, string>
 ): Promise<T> {
@@ -145,4 +138,3 @@ getElement<HTMLButtonElement>("createIntent").addEventListener("click", async ()
 getElement<HTMLButtonElement>("newSession").addEventListener("click", () => {
   showView("funding");
 });
-
