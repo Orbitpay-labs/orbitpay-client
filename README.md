@@ -15,10 +15,19 @@ Polished web interface for OrbitPay Kit, a C-address onboarding and payment tool
 Open `index.html` directly in a browser, or run:
 
 ```powershell
-node preview.mjs
+node scripts/preview.js
 ```
 
 The preview server listens on `http://localhost:5173`.
+
+## TypeScript
+
+The browser interaction layer and preview server are written in TypeScript under `src/` and compiled to `scripts/`.
+
+```powershell
+npm install
+npm run build
+```
 
 Optional local API:
 

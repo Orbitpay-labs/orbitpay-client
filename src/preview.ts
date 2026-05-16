@@ -1,26 +1,32 @@
-import http from "node:http";
+import http, { type IncomingMessage, type ServerResponse } from "node:http";
 import { readFile } from "node:fs/promises";
 import { extname, join, normalize } from "node:path";
 
 const PORT = Number.parseInt(process.env.PORT || "5173", 10);
 const ROOT = process.cwd();
 
-const contentTypes = {
+const contentTypes: Record<string, string> = {
   ".html": "text/html; charset=utf-8",
   ".css": "text/css; charset=utf-8",
   ".js": "application/javascript; charset=utf-8",
-  ".json": "application/json; charset=utf-8"
+  ".json": "application/json; charset=utf-8",
+  ".png": "image/png",
+  ".svg": "image/svg+xml"
 };
 
-const server = http.createServer(async (request, response) => {
+function sendText(response: ServerResponse, statusCode: number, body: string): void {
+  response.writeHead(statusCode, { "Content-Type": "text/plain; charset=utf-8" });
+  response.end(body);
+}
+
+const server = http.createServer(async (request: IncomingMessage, response: ServerResponse) => {
   try {
     const url = new URL(request.url || "/", `http://${request.headers.host}`);
     const pathname = url.pathname === "/" ? "/index.html" : url.pathname;
     const filePath = normalize(join(ROOT, pathname));
 
     if (!filePath.startsWith(ROOT)) {
-      response.writeHead(403);
-      response.end("Forbidden");
+      sendText(response, 403, "Forbidden");
       return;
     }
 
@@ -30,8 +36,7 @@ const server = http.createServer(async (request, response) => {
     });
     response.end(body);
   } catch {
-    response.writeHead(404);
-    response.end("Not found");
+    sendText(response, 404, "Not found");
   }
 });
 
