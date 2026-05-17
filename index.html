@@ -103,6 +103,40 @@
               <div class="result-strip" id="fundingResult">
                 Ready to create a testnet funding session.
               </div>
+
+              <div class="instruction-card" aria-label="Funding instruction card">
+                <div class="instruction-topline">
+                  <div>
+                    <p class="eyebrow">Funding instructions</p>
+                    <h3>Copyable testnet payment details</h3>
+                  </div>
+                  <span class="instruction-badge">Ready</span>
+                </div>
+                <dl class="instruction-grid">
+                  <div>
+                    <dt>Send</dt>
+                    <dd id="instructionAmount">45.00 USDC</dd>
+                  </div>
+                  <div>
+                    <dt>Network</dt>
+                    <dd id="instructionNetwork">Stellar Testnet</dd>
+                  </div>
+                  <div class="wide">
+                    <dt>Destination C-address</dt>
+                    <dd id="instructionDestination">CC4VBD5EBGTEJQ7YAHU3MVP7SP2JNCQX6M6NPVZV4LQWF3N9QP</dd>
+                  </div>
+                  <div>
+                    <dt>Memo</dt>
+                    <dd id="instructionMemo">ORBIT-1042</dd>
+                  </div>
+                </dl>
+                <div class="instruction-actions">
+                  <button class="secondary-button compact" id="copyInstructions">Copy details</button>
+                  <a href="https://laboratory.stellar.org/#account-creator?network=test" target="_blank" rel="noreferrer">
+                    Open Stellar testnet lab
+                  </a>
+                </div>
+              </div>
             </section>
 
             <section class="panel checkout-preview">

@@ -257,6 +257,7 @@ h2 {
 }
 
 .primary-button,
+.secondary-button,
 .ghost-button,
 .pay-button,
 .icon-button {
@@ -283,6 +284,18 @@ h2 {
 
 .primary-button.compact {
   min-height: 44px;
+  white-space: nowrap;
+}
+
+.secondary-button {
+  border: 1px solid rgba(36, 95, 189, 0.28);
+  background: #ffffff;
+  color: var(--blue);
+  padding: 0 16px;
+}
+
+.secondary-button.compact {
+  min-height: 40px;
   white-space: nowrap;
 }
 
@@ -459,6 +472,81 @@ select:focus {
   border-color: rgba(21, 112, 93, 0.22);
   background: var(--green-2);
   color: var(--green);
+}
+
+.instruction-card {
+  margin-top: 16px;
+  padding: 16px;
+  border: 1px solid rgba(36, 95, 189, 0.16);
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(36, 95, 189, 0.08), rgba(248, 112, 96, 0.08)),
+    #ffffff;
+}
+
+.instruction-topline,
+.instruction-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.instruction-topline h3 {
+  margin: 4px 0 0;
+  font-size: 1rem;
+}
+
+.instruction-badge {
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: var(--green-2);
+  color: var(--green);
+  font-size: 0.76rem;
+  font-weight: 850;
+}
+
+.instruction-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 16px 0;
+}
+
+.instruction-grid div {
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.78);
+}
+
+.instruction-grid .wide {
+  grid-column: 1 / -1;
+}
+
+.instruction-grid dt {
+  margin-bottom: 6px;
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 820;
+  text-transform: uppercase;
+}
+
+.instruction-grid dd {
+  margin: 0;
+  color: var(--ink);
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 0.88rem;
+  font-weight: 780;
+  overflow-wrap: anywhere;
+}
+
+.instruction-actions a {
+  color: var(--blue);
+  font-size: 0.86rem;
+  font-weight: 820;
+  text-decoration: none;
 }
 
 .checkout-card {
@@ -774,6 +862,7 @@ select:focus {
 
   .hero-actions,
   .panel-heading,
+  .instruction-actions,
   .sidebar {
     align-items: stretch;
   }
@@ -783,12 +872,18 @@ select:focus {
   .funding-form,
   .address-flow,
   .product-columns,
-  .system-map {
+  .system-map,
+  .instruction-grid {
     grid-template-columns: 1fr;
     flex-direction: column;
   }
 
+  .instruction-actions {
+    flex-direction: column;
+  }
+
   .primary-button,
+  .secondary-button,
   .ghost-button {
     width: 100%;
   }

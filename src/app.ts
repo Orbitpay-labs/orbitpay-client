@@ -29,6 +29,9 @@ const demoState: DemoState = {
   lastIntent: "op-1042"
 };
 
+const fundingDestination = "CC4VBD5EBGTEJQ7YAHU3MVP7SP2JNCQX6M6NPVZV4LQWF3N9QP";
+const fundingMemo = "ORBIT-1042";
+
 const views = document.querySelectorAll<HTMLElement>(".view");
 const navItems = document.querySelectorAll<HTMLButtonElement>(".nav-item");
 
@@ -72,6 +75,28 @@ function formatMoney(value: string): string {
   }).format(Number.isFinite(numeric) ? numeric : 0);
 }
 
+function getFundingInstructionText(): string {
+  const asset = getElement<HTMLSelectElement>("assetSelect").value;
+  const amount = getElement<HTMLInputElement>("amountInput").value.trim() || "0";
+
+  return [
+    `Send: ${amount} ${asset}`,
+    "Network: Stellar Testnet",
+    `Destination: ${fundingDestination}`,
+    `Memo: ${fundingMemo}`
+  ].join("\n");
+}
+
+function updateFundingInstructions(): void {
+  const asset = getElement<HTMLSelectElement>("assetSelect").value;
+  const amount = getElement<HTMLInputElement>("amountInput").value.trim() || "0";
+
+  getElement<HTMLElement>("instructionAmount").textContent = `${amount} ${asset}`;
+  getElement<HTMLElement>("instructionNetwork").textContent = "Stellar Testnet";
+  getElement<HTMLElement>("instructionDestination").textContent = fundingDestination;
+  getElement<HTMLElement>("instructionMemo").textContent = fundingMemo;
+}
+
 async function postJson<T>(
   path: string,
   payload: Record<string, string>
@@ -105,14 +130,34 @@ getElement<HTMLButtonElement>("simulateFunding").addEventListener("click", async
 
   result.textContent = "Creating funding session...";
   const session = await postJson<FundingSessionResponse>("/funding-sessions", {
-    destination: "CC4VBD5EBGTEJQ7YAHU3MVP7SP2JNCQX6M6NPVZV4LQWF3N9QP",
+    destination: fundingDestination,
     asset,
     amount
   });
 
   demoState.sessions += 1;
+  updateFundingInstructions();
   getElement<HTMLElement>("checkoutAmount").textContent = formatMoney(amount);
-  result.textContent = `Session ${session.id} prepared for ${amount} ${asset} on ${session.network}.`;
+  result.textContent = `Session ${session.id} prepared. The user can copy the payment details below and fund ${amount} ${asset} on ${session.network}.`;
+});
+
+getElement<HTMLSelectElement>("assetSelect").addEventListener("change", updateFundingInstructions);
+getElement<HTMLInputElement>("amountInput").addEventListener("input", updateFundingInstructions);
+
+getElement<HTMLButtonElement>("copyInstructions").addEventListener("click", async () => {
+  const copyButton = getElement<HTMLButtonElement>("copyInstructions");
+  const previousLabel = copyButton.textContent || "Copy details";
+
+  try {
+    await navigator.clipboard.writeText(getFundingInstructionText());
+    copyButton.textContent = "Copied";
+  } catch {
+    copyButton.textContent = "Copy unavailable";
+  }
+
+  window.setTimeout(() => {
+    copyButton.textContent = previousLabel;
+  }, 1600);
 });
 
 getElement<HTMLButtonElement>("createIntent").addEventListener("click", async () => {
@@ -138,3 +183,5 @@ getElement<HTMLButtonElement>("createIntent").addEventListener("click", async ()
 getElement<HTMLButtonElement>("newSession").addEventListener("click", () => {
   showView("funding");
 });
+
+updateFundingInstructions();
