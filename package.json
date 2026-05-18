@@ -5,7 +5,11 @@
   "type": "module",
   "description": "Responsive C-address checkout and funding UI for Stellar/Soroban apps.",
   "scripts": {
-    "build": "tsc -p tsconfig.json",
+    "build": "npm run typecheck",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "node --test",
+    "format:check": "node scripts/check-format.mjs",
+    "demo:smoke": "node scripts/demo-smoke.mjs",
     "start": "node scripts/preview.js"
   },
   "devDependencies": {
