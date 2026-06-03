@@ -7,294 +7,237 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <div class="app-shell">
-      <aside class="sidebar" aria-label="Primary">
-        <a class="brand" href="#overview" aria-label="OrbitPay Kit home">
-          <span class="brand-mark" aria-hidden="true">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="none">
-              <path d="M 144 256 L 27.598 256 L 144 139.598 Z M 256 207.5 L 200 256 L 200 56 L 0 56 L 48 0 L 256 0 Z M 0 204.402 L 0 112 L 92.402 112 Z" fill="currentColor"></path>
-            </svg>
-          </span>
-          <span>
-            <strong>OrbitPay Kit</strong>
-            <small>C-address payments</small>
-          </span>
-        </a>
+    <header class="site-header">
+      <a class="brand" href="#overview" aria-label="OrbitPay Kit home">
+        <span class="brand-mark" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="none">
+            <path d="M 144 256 L 27.598 256 L 144 139.598 Z M 256 207.5 L 200 256 L 200 56 L 0 56 L 48 0 L 256 0 Z M 0 204.402 L 0 112 L 92.402 112 Z" fill="currentColor"></path>
+          </svg>
+        </span>
+        <span>OrbitPay</span>
+      </a>
+      <nav class="nav-list" aria-label="Primary">
+        <button class="nav-item active" data-view="overview">Overview</button>
+        <button class="nav-item" data-view="funding">Flow</button>
+        <button class="nav-item" data-view="checkout">Checkout</button>
+        <button class="nav-item" data-view="sdk">SDK</button>
+      </nav>
+      <button class="header-cta" id="newSession">Try demo</button>
+    </header>
 
-        <nav class="nav-list">
-          <button class="nav-item active" data-view="overview">
-            <span>01</span>
-            <strong>Overview</strong>
-          </button>
-          <button class="nav-item" data-view="funding">
-            <span>02</span>
-            <strong>Funding flow</strong>
-          </button>
-          <button class="nav-item" data-view="checkout">
-            <span>03</span>
-            <strong>Checkout</strong>
-          </button>
-          <button class="nav-item" data-view="sdk">
-            <span>04</span>
-            <strong>Developer kit</strong>
-          </button>
-        </nav>
-      </aside>
-
-      <main>
-        <header class="hero">
-          <div class="hero-copy">
-            <p class="eyebrow">Stellar payment infrastructure</p>
-            <h1>Checkout and funding flows for Soroban smart accounts.</h1>
-            <p class="lede">
-              OrbitPay Kit turns C-address funding into a clean product experience with payment links,
-              wallet routes, checkout intents, and status tracking for Stellar apps.
-            </p>
-            <div class="hero-actions">
-              <button class="primary-button" id="newSession">Create funding session</button>
-              <button class="ghost-button" data-view-link="checkout">Preview checkout</button>
-            </div>
+    <main>
+      <section class="hero view active" id="overview">
+        <div class="hero-copy">
+          <p class="eyebrow">Stellar payment MVP</p>
+          <h1>Simple C-address payments for apps built on Stellar.</h1>
+          <p class="lede">
+            OrbitPay gives builders a clean way to create funding sessions, show users where to
+            send funds, and track payment intent status without turning checkout into a crypto maze.
+          </p>
+          <div class="hero-actions">
+            <button class="primary-button" data-view-link="funding">Explore the flow</button>
+            <button class="ghost-button" data-view-link="checkout">Preview checkout</button>
           </div>
-        </header>
+        </div>
 
-        <section class="view active" id="overview">
-          <div class="overview-grid">
-            <section class="panel route-panel">
-              <div class="panel-heading">
-                <div>
-                  <p class="eyebrow">Core user flow</p>
-                  <h2>G-address to C-address funding</h2>
-                </div>
-                <span class="pill">Demo flow</span>
-              </div>
-
-              <div class="address-flow" aria-label="Address funding route">
-                <div class="address-node">
-                  <small>Starts from</small>
-                  <strong>GCF3...Y2RZ</strong>
-                  <span>User wallet or exchange</span>
-                </div>
-                <div class="flow-rail" aria-hidden="true">
-                  <span></span>
-                </div>
-                <div class="address-node smart">
-                  <small>Funds</small>
-                  <strong>CC4V...N9QP</strong>
-                  <span>Soroban smart account</span>
-                </div>
-              </div>
-
-              <div class="funding-form">
-                <label>
-                  Asset
-                  <select id="assetSelect">
-                    <option>USDC</option>
-                    <option>XLM</option>
-                    <option>EURC</option>
-                  </select>
-                </label>
-                <label>
-                  Amount
-                  <input id="amountInput" value="45.00" inputmode="decimal" />
-                </label>
-                <button class="primary-button compact" id="simulateFunding">Simulate funding</button>
-              </div>
-
-              <div class="result-strip" id="fundingResult">
-                Ready to create a testnet funding session.
-              </div>
-
-              <div class="instruction-card" aria-label="Funding instruction card">
-                <div class="instruction-topline">
-                  <div>
-                    <p class="eyebrow">Funding instructions</p>
-                    <h3>Copyable testnet payment details</h3>
-                  </div>
-                  <span class="instruction-badge">Ready</span>
-                </div>
-                <dl class="instruction-grid">
-                  <div>
-                    <dt>Send</dt>
-                    <dd id="instructionAmount">45.00 USDC</dd>
-                  </div>
-                  <div>
-                    <dt>Network</dt>
-                    <dd id="instructionNetwork">Stellar Testnet</dd>
-                  </div>
-                  <div class="wide">
-                    <dt>Destination C-address</dt>
-                    <dd id="instructionDestination">CC4VBD5EBGTEJQ7YAHU3MVP7SP2JNCQX6M6NPVZV4LQWF3N9QP</dd>
-                  </div>
-                  <div>
-                    <dt>Memo</dt>
-                    <dd id="instructionMemo">ORBIT-1042</dd>
-                  </div>
-                </dl>
-                <div class="instruction-actions">
-                  <button class="secondary-button compact" id="copyInstructions">Copy details</button>
-                  <a href="https://laboratory.stellar.org/#account-creator?network=test" target="_blank" rel="noreferrer">
-                    Open Stellar testnet lab
-                  </a>
-                </div>
-              </div>
-            </section>
-
-            <section class="panel checkout-preview">
-              <div class="panel-heading">
-                <div>
-                  <p class="eyebrow">Payment surface</p>
-                  <h2>Checkout preview</h2>
-                </div>
-                <span class="pill subtle">USDC</span>
-              </div>
-
-              <div class="checkout-card" aria-label="Checkout preview">
-                <div class="checkout-header">
-                  <div class="merchant-logo">A</div>
-                  <div>
-                    <strong>Atlas Studio</strong>
-                    <span>Invoice OP-1042</span>
-                  </div>
-                </div>
-                <div class="amount-display">
-                  <span>Total due</span>
-                  <strong id="checkoutAmount">$45.00</strong>
-                </div>
-                <div class="qr-art" aria-hidden="true">
-                  <span></span><span></span><span></span><span></span>
-                  <span></span><span></span><span></span><span></span>
-                  <span></span><span></span><span></span><span></span>
-                  <span></span><span></span><span></span><span></span>
-                </div>
-                <button class="pay-button">Pay with Stellar</button>
-              </div>
-            </section>
-
-            <section class="panel product-panel">
-              <div class="panel-heading">
-                <div>
-                  <p class="eyebrow">Product layer</p>
-                  <h2>Everything an app needs to accept and route Stellar payments.</h2>
-                </div>
-              </div>
-              <div class="product-columns">
-                <article>
-                  <strong>Payment links</strong>
-                  <span>Create clean checkout routes for invoices, merchants, and app funding flows.</span>
-                </article>
-                <article>
-                  <strong>Funding sessions</strong>
-                  <span>Guide users from G-address wallets or exchanges into C-address smart accounts.</span>
-                </article>
-                <article>
-                  <strong>Status updates</strong>
-                  <span>Track payment state and return settlement updates to the merchant app.</span>
-                </article>
-              </div>
-            </section>
-          </div>
-        </section>
-
-        <section class="view" id="funding">
-          <div class="two-column">
-            <section class="panel">
-              <div class="panel-heading">
-                <div>
-                  <p class="eyebrow">Session builder</p>
-                  <h2>Create a funding route</h2>
-                </div>
-              </div>
-              <div class="field-stack">
-                <label>
-                  Destination C-address
-                  <input value="CC4VBD5EBGTEJQ7YAHU3MVP7SP2JNCQX6M6NPVZV4LQWF3N9QP" />
-                </label>
-                <label>
-                  User starts from
-                  <select>
-                    <option>Existing Stellar wallet</option>
-                    <option>Centralized exchange withdrawal</option>
-                    <option>Merchant checkout</option>
-                  </select>
-                </label>
-                <label>
-                  Settlement asset
-                  <select>
-                    <option>USDC</option>
-                    <option>XLM</option>
-                    <option>EURC</option>
-                  </select>
-                </label>
-              </div>
-            </section>
-            <section class="panel system-map">
-              <div class="map-frame" aria-hidden="true">
-                <div class="map-node source">G</div>
-                <div class="map-node api">API</div>
-                <div class="map-node contract">C</div>
-                <div class="map-line one"></div>
-                <div class="map-line two"></div>
-              </div>
+        <div class="hero-visual" aria-label="OrbitPay payment preview">
+          <div class="floating-card payment-card">
+            <div class="card-top">
               <div>
-                  <p class="eyebrow">Payment route</p>
-                  <h2>Wallet, payment link, and contract state in one flow.</h2>
-                  <p class="panel-copy">
-                    A merchant creates an intent, the user funds with USDC or XLM, and the app
-                    receives a clear settlement state when the payment completes.
-                  </p>
-                </div>
-              </section>
+                <span class="muted-label">Payment intent</span>
+                <strong>OP-1042</strong>
+              </div>
+              <span class="status-dot">Ready</span>
+            </div>
+            <div class="big-amount" id="checkoutAmount">$45.00</div>
+            <div class="route-line">
+              <span>G-address</span>
+              <i></i>
+              <span>C-address</span>
+            </div>
+            <button class="pay-button">Pay with Stellar</button>
           </div>
-        </section>
-
-        <section class="view" id="checkout">
-          <div class="two-column">
-            <section class="panel">
-              <div class="panel-heading">
-                <div>
-                  <p class="eyebrow">Payment intent</p>
-                  <h2>Create checkout link</h2>
-                </div>
-              </div>
-              <div class="field-stack">
-                <label>
-                  Merchant
-                  <input id="merchantInput" value="Atlas Studio" />
-                </label>
-                <label>
-                  Invoice
-                  <input id="invoiceInput" value="OP-1042" />
-                </label>
-                <label>
-                  Amount
-                  <input id="checkoutInput" value="45.00" />
-                </label>
-                <button class="primary-button" id="createIntent">Create intent</button>
-              </div>
-            </section>
-            <section class="panel">
-              <div class="panel-heading">
-                <div>
-                  <p class="eyebrow">Shareable route</p>
-                  <h2>Payment link</h2>
-                </div>
-              </div>
-              <div class="link-box" id="paymentLink">https://pay.orbitkit.dev/i/op-1042</div>
-              <div class="result-strip success" id="intentResult">Intent ready for demo.</div>
-            </section>
+          <div class="floating-card mini-card">
+            <span>Settlement asset</span>
+            <strong>USDC</strong>
           </div>
-        </section>
+        </div>
+      </section>
 
-        <section class="view" id="sdk">
-          <div class="two-column">
-            <section class="panel">
-              <div class="panel-heading">
-                <div>
-                  <p class="eyebrow">Developer kit</p>
-                  <h2>SDK preview</h2>
-                </div>
+      <section class="proof-strip" aria-label="OrbitPay highlights">
+        <article>
+          <strong>Hosted payment links</strong>
+          <span>Generate checkout pages for invoices and deposits.</span>
+        </article>
+        <article>
+          <strong>C-address funding</strong>
+          <span>Guide users from familiar Stellar wallets into smart accounts.</span>
+        </article>
+        <article>
+          <strong>MVP-ready API</strong>
+          <span>Demo endpoints for funding sessions and payment intents.</span>
+        </article>
+      </section>
+
+      <section class="section intro-section">
+        <div>
+          <p class="eyebrow">What it solves</p>
+          <h2>Most users can send Stellar funds. Fewer know how to fund smart accounts cleanly.</h2>
+        </div>
+        <p>
+          OrbitPay sits between merchant apps, Stellar wallets, and Soroban smart accounts. It turns
+          the technical route into a simple product experience: amount, asset, destination, memo, and
+          payment state.
+        </p>
+      </section>
+
+      <section class="section view" id="funding">
+        <div class="section-heading">
+          <p class="eyebrow">Funding flow</p>
+          <h2>One guided path from wallet funds to smart-account balance.</h2>
+        </div>
+
+        <div class="flow-grid">
+          <div class="flow-card">
+            <span>1</span>
+            <h3>Create a session</h3>
+            <p>The app requests a destination, asset, amount, and success state.</p>
+          </div>
+          <div class="flow-card">
+            <span>2</span>
+            <h3>Show payment details</h3>
+            <p>OrbitPay gives the user copyable Stellar Testnet instructions.</p>
+          </div>
+          <div class="flow-card">
+            <span>3</span>
+            <h3>Confirm settlement</h3>
+            <p>The app can treat the funded intent as a checkout or deposit event.</p>
+          </div>
+        </div>
+
+        <div class="demo-panel">
+          <div class="demo-copy">
+            <p class="eyebrow">MVP demo</p>
+            <h3>Create a test funding session</h3>
+            <p>
+              This keeps the hackathon experience honest: small scope, visible behavior, and a clear
+              path to real Stellar payment tracking later.
+            </p>
+          </div>
+          <div class="funding-form">
+            <label>
+              Asset
+              <select id="assetSelect">
+                <option>USDC</option>
+                <option>XLM</option>
+                <option>EURC</option>
+              </select>
+            </label>
+            <label>
+              Amount
+              <input id="amountInput" value="45.00" inputmode="decimal" />
+            </label>
+            <button class="primary-button compact" id="simulateFunding">Simulate funding</button>
+          </div>
+          <div class="result-strip" id="fundingResult">Ready to create a testnet funding session.</div>
+        </div>
+
+        <div class="instruction-card" aria-label="Funding instruction card">
+          <div class="instruction-topline">
+            <div>
+              <p class="eyebrow">Funding instructions</p>
+              <h3>Copyable Stellar Testnet details</h3>
+            </div>
+            <span class="instruction-badge">Ready</span>
+          </div>
+          <dl class="instruction-grid">
+            <div>
+              <dt>Send</dt>
+              <dd id="instructionAmount">45.00 USDC</dd>
+            </div>
+            <div>
+              <dt>Network</dt>
+              <dd id="instructionNetwork">Stellar Testnet</dd>
+            </div>
+            <div class="wide">
+              <dt>Destination C-address</dt>
+              <dd id="instructionDestination">CC4VBD5EBGTEJQ7YAHU3MVP7SP2JNCQX6M6NPVZV4LQWF3N9QP</dd>
+            </div>
+            <div>
+              <dt>Memo</dt>
+              <dd id="instructionMemo">ORBIT-1042</dd>
+            </div>
+          </dl>
+          <div class="instruction-actions">
+            <button class="secondary-button compact" id="copyInstructions">Copy details</button>
+            <a href="https://laboratory.stellar.org/#account-creator?network=test" target="_blank" rel="noreferrer">
+              Open Stellar testnet lab
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section class="section checkout-section view" id="checkout">
+        <div class="section-heading">
+          <p class="eyebrow">Checkout experience</p>
+          <h2>A simple payment page your app can send users to.</h2>
+        </div>
+
+        <div class="checkout-layout">
+          <div class="checkout-form">
+            <label>
+              Merchant
+              <input id="merchantInput" value="Atlas Studio" />
+            </label>
+            <label>
+              Invoice
+              <input id="invoiceInput" value="OP-1042" />
+            </label>
+            <label>
+              Amount
+              <input id="checkoutInput" value="45.00" />
+            </label>
+            <button class="primary-button" id="createIntent">Create intent</button>
+          </div>
+
+          <div class="checkout-card">
+            <div class="checkout-header">
+              <div class="merchant-logo">A</div>
+              <div>
+                <strong>Atlas Studio</strong>
+                <span>Invoice OP-1042</span>
               </div>
-              <pre class="code-block"><code>import { OrbitPay } from "@orbitpay/sdk";
+            </div>
+            <div class="qr-art" aria-hidden="true">
+              <span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span>
+            </div>
+            <div class="link-box" id="paymentLink">https://pay.orbitkit.dev/i/op-1042</div>
+            <div class="result-strip success" id="intentResult">Intent ready for demo.</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section image-section">
+        <div>
+          <p class="eyebrow">Current prototype</p>
+          <h2>The MVP already has a working browser surface.</h2>
+          <p>
+            For the hackathon, this page frames the project clearly while still pointing judges to
+            the interactive proof that OrbitPay can create sessions and checkout intents.
+          </p>
+        </div>
+        <img src="orbitpay-preview.png" alt="OrbitPay prototype preview" />
+      </section>
+
+      <section class="section sdk-section view" id="sdk">
+        <div class="section-heading">
+          <p class="eyebrow">Developer kit</p>
+          <h2>Small API surface, clear integration story.</h2>
+        </div>
+        <pre class="code-block"><code>import { OrbitPay } from "@orbitpay/sdk";
 
 const session = await OrbitPay.createFundingSession({
   network: "testnet",
@@ -303,27 +246,14 @@ const session = await OrbitPay.createFundingSession({
   amount: "45.00",
   successUrl: "https://merchant.app/paid"
 });</code></pre>
-            </section>
-            <section class="panel backlog-panel">
-              <div class="panel-heading">
-                <div>
-                  <p class="eyebrow">Integration surface</p>
-                  <h2>Use the pieces together or separately.</h2>
-                </div>
-              </div>
-              <ul class="feature-list">
-                <li><span>01</span> Hosted checkout for invoices and deposits</li>
-                <li><span>02</span> Payment intent API for app backends</li>
-                <li><span>03</span> C-address funding session builder</li>
-                <li><span>04</span> Webhook-style settlement callbacks</li>
-                <li><span>05</span> Soroban-ready contract intent model</li>
-                <li><span>06</span> Testnet-first developer workflow</li>
-              </ul>
-            </section>
-          </div>
-        </section>
-      </main>
-    </div>
+      </section>
+
+      <section class="final-cta">
+        <p class="eyebrow">Hackathon scope</p>
+        <h2>Built as an MVP for Stellar app builders who need payment onboarding that feels normal.</h2>
+        <button class="primary-button" data-view-link="funding">Try the funding demo</button>
+      </section>
+    </main>
 
     <script type="module" src="scripts/app.js"></script>
   </body>

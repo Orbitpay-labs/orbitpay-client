@@ -18,6 +18,10 @@ function getElement(id) {
 function showView(target) {
     navItems.forEach((nav) => nav.classList.toggle("active", nav.dataset.view === target));
     views.forEach((view) => view.classList.toggle("active", view.id === target));
+    const targetSection = document.getElementById(target);
+    if (targetSection) {
+        targetSection.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
 }
 navItems.forEach((item) => {
     item.addEventListener("click", () => {
@@ -59,11 +63,14 @@ function updateFundingInstructions() {
     getElement("instructionMemo").textContent = fundingMemo;
 }
 async function postJson(path, payload) {
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), 900);
     try {
         const response = await fetch(`${API_BASE}${path}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload)
+            body: JSON.stringify(payload),
+            signal: controller.signal
         });
         if (!response.ok) {
             throw new Error(`API returned ${response.status}`);
@@ -77,6 +84,9 @@ async function postJson(path, payload) {
             status: "simulated",
             ...payload
         };
+    }
+    finally {
+        window.clearTimeout(timeout);
     }
 }
 getElement("simulateFunding").addEventListener("click", async () => {
