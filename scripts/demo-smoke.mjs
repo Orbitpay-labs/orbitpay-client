@@ -30,7 +30,11 @@ try {
   const response = await waitForDemo();
   const html = await response.text();
 
-  if (!html.includes("Copyable testnet payment details")) {
+  if (!html.includes("Simple C-address payments for apps built on Stellar.")) {
+    throw new Error("Landing page hero is missing from demo HTML");
+  }
+
+  if (!html.includes("Copyable Stellar Testnet details") || !html.includes('id="copyInstructions"')) {
     throw new Error("Funding instruction card is missing from demo HTML");
   }
 
