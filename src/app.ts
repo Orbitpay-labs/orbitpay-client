@@ -196,4 +196,22 @@ getElement<HTMLButtonElement>("newSession").addEventListener("click", () => {
   showView("funding");
 });
 
+getElement<HTMLButtonElement>("copyCodeButton").addEventListener("click", async () => {
+  const copyButton = getElement<HTMLButtonElement>("copyCodeButton");
+  const codeText = getElement<HTMLElement>("codeToCopy").textContent || "";
+  const span = copyButton.querySelector("span");
+  const previousLabel = span?.textContent || "Copy";
+
+  try {
+    await navigator.clipboard.writeText(codeText);
+    if (span) span.textContent = "Copied";
+  } catch {
+    if (span) span.textContent = "Unavailable";
+  }
+
+  window.setTimeout(() => {
+    if (span) span.textContent = previousLabel;
+  }, 1600);
+});
+
 updateFundingInstructions();

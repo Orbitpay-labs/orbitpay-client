@@ -37,4 +37,3 @@ const server = http.createServer(async (request, response) => {
 server.listen(PORT, () => {
     console.log(`OrbitPay client running on http://localhost:${PORT}`);
 });
-

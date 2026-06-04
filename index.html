@@ -3,10 +3,22 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>OrbitPay Kit</title>
+    <title>OrbitPay Kit — Stellar Smart Account Onboarding</title>
+    <meta name="description" content="OrbitPay provides a responsive Stellar C-address checkout and smart-account funding UI. Guide users seamlessly from wallets to Soroban contracts." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
+    <div class="bg-elements" aria-hidden="true">
+      <div class="glow-orb glow-orb-1"></div>
+      <div class="glow-orb glow-orb-2"></div>
+      <div class="glow-orb glow-orb-3"></div>
+      <div class="orbital-ring orbital-ring-1"></div>
+      <div class="orbital-ring orbital-ring-2"></div>
+      <div class="orbital-ring orbital-ring-3"></div>
+    </div>
+
     <header class="site-header">
       <a class="brand" href="#overview" aria-label="OrbitPay Kit home">
         <span class="brand-mark" aria-hidden="true">
@@ -220,32 +232,44 @@
         </div>
       </section>
 
-      <section class="section image-section">
-        <div>
-          <p class="eyebrow">Current prototype</p>
-          <h2>The MVP already has a working browser surface.</h2>
-          <p>
-            For the hackathon, this page frames the project clearly while still pointing judges to
-            the interactive proof that OrbitPay can create sessions and checkout intents.
-          </p>
-        </div>
-        <img src="orbitpay-preview.png" alt="OrbitPay prototype preview" />
-      </section>
 
       <section class="section sdk-section view" id="sdk">
         <div class="section-heading">
           <p class="eyebrow">Developer kit</p>
           <h2>Small API surface, clear integration story.</h2>
         </div>
-        <pre class="code-block"><code>import { OrbitPay } from "@orbitpay/sdk";
+        <div class="editor-window">
+          <div class="editor-header">
+            <div class="window-controls">
+              <span class="dot red"></span>
+              <span class="dot yellow"></span>
+              <span class="dot green"></span>
+            </div>
+            <div class="editor-tabs">
+              <div class="editor-tab active">
+                <span class="tab-icon ts-icon">TS</span>
+                <span class="tab-title">main.ts</span>
+              </div>
+              <div class="editor-tab">
+                <span class="tab-icon terminal-icon">$_</span>
+                <span class="tab-title">install.sh</span>
+              </div>
+            </div>
+            <button class="copy-code-btn" id="copyCodeButton" aria-label="Copy SDK code to clipboard">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+              <span>Copy</span>
+            </button>
+          </div>
+          <pre class="code-block"><code id="codeToCopy"><span class="code-keyword">import</span> { <span class="code-variable">OrbitPay</span> } <span class="code-keyword">from</span> <span class="code-string">"@orbitpay/sdk"</span>;
 
-const session = await OrbitPay.createFundingSession({
-  network: "testnet",
-  destination: "CC4V...N9QP",
-  asset: "USDC",
-  amount: "45.00",
-  successUrl: "https://merchant.app/paid"
+<span class="code-keyword">const</span> <span class="code-variable">session</span> = <span class="code-keyword">await</span> <span class="code-variable">OrbitPay</span>.<span class="code-function">createFundingSession</span>({
+  <span class="code-property">network</span>: <span class="code-string">"testnet"</span>,
+  <span class="code-property">destination</span>: <span class="code-string">"CC4V...N9QP"</span>,
+  <span class="code-property">asset</span>: <span class="code-string">"USDC"</span>,
+  <span class="code-property">amount</span>: <span class="code-string">"45.00"</span>,
+  <span class="code-property">successUrl</span>: <span class="code-string">"https://merchant.app/paid"</span>
 });</code></pre>
+        </div>
       </section>
 
       <section class="final-cta">
