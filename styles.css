@@ -1937,9 +1937,19 @@ select option {
     flex-direction: column;
     gap: 16px;
     align-items: flex-start;
-    padding: 20px 0;
   }
 }
 
+/* Responsive Overrides for Comparison Section */
+@media (max-width: 920px) {
+  .comparison-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
 
-
+@media (max-width: 620px) {
+  .comparison-card {
+    padding: 24px 16px;
+  }
+}
