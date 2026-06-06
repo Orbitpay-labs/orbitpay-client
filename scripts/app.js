@@ -260,58 +260,210 @@ getElement("copyInstructions").addEventListener("click", async () => {
         copyButton.textContent = previousLabel;
     }, 1600);
 });
-// Intent Creation
-getElement("createIntent").addEventListener("click", async () => {
-    const merchant = getElement("merchantInput").value.trim() || "Merchant";
-    const invoice = getElement("invoiceInput").value.trim() || "OP-1000";
-    const amount = getElement("checkoutInput").value.trim() || "0";
-    const result = getElement("intentResult");
-    result.textContent = "Creating checkout intent...";
-    const intent = await postJson("/payment-intents", {
-        merchant,
-        invoice,
-        amount,
-        asset: "USDC"
-    });
-    demoState.lastIntent = invoice.toLowerCase();
-    getElement("paymentLink").textContent = `https://pay.orbitkit.dev/i/${demoState.lastIntent}`;
-    getElement("checkoutAmount").textContent = formatMoney(amount);
-    // Update checkout card details dynamically
-    const merchantLogo = document.getElementById("checkoutMerchantLogo");
-    if (merchantLogo)
-        merchantLogo.textContent = merchant.charAt(0).toUpperCase();
-    const merchantName = document.getElementById("checkoutMerchantName");
-    if (merchantName)
-        merchantName.textContent = merchant;
-    const invoiceNum = document.getElementById("checkoutInvoiceNum");
-    if (invoiceNum)
-        invoiceNum.textContent = `Invoice ${invoice}`;
-    result.textContent = `Intent ${intent.id} is ready for ${merchant}.`;
-    addActivityLog(`Intent created: <strong>${invoice}</strong> for <strong>$${amount}</strong>`);
+// -------------------------------------------------------------
+// Interactive Checkout Demo Simulation & Controls
+// -------------------------------------------------------------
+function updateWebhookPayload(event, status, amount, asset, network) {
+    const codeEl = document.getElementById("webhookPayloadCode");
+    if (!codeEl)
+        return;
+    codeEl.innerHTML = `{
+  <span class="code-property">"event"</span>: <span class="code-string">"${event}"</span>,
+  <span class="code-property">"sessionId"</span>: <span class="code-string">"op_sess_1042"</span>,
+  <span class="code-property">"amount"</span>: <span class="code-string">"${amount}"</span>,
+  <span class="code-property">"asset"</span>: <span class="code-string">"${asset}"</span>,
+  <span class="code-property">"network"</span>: <span class="code-string">"${network}"</span>,
+  <span class="code-property">"status"</span>: <span class="code-string">"${status}"</span>
+}`;
+}
+function updateWebhookStatus(status, text) {
+    const pill = document.getElementById("webhookStatusVal");
+    if (!pill)
+        return;
+    pill.textContent = text;
+    pill.className = "webhook-status-pill";
+    if (status === 'success') {
+        pill.classList.add("success");
+    }
+}
+function setCardStatusDot(status) {
+    const dot = document.getElementById("cardStatusDot");
+    if (!dot)
+        return;
+    dot.className = "status-dot";
+    if (status === 'awaiting') {
+        dot.classList.add("awaiting");
+        dot.textContent = "Awaiting payment";
+    }
+    else if (status === 'funded') {
+        dot.textContent = "Funded";
+    }
+    else if (status === 'settled') {
+        dot.textContent = "Settled";
+    }
+}
+function updateCheckoutDemoFields() {
+    const amount = getElement("demoAmountInput").value || "45.00";
+    const asset = getElement("demoAssetSelect").value;
+    const networkVal = getElement("demoNetworkSelect").value;
+    getElement("cardAmountVal").textContent = amount;
+    getElement("cardAssetVal").textContent = asset;
+    getElement("cardAssetLogo").textContent = asset;
+    getElement("cardNetworkVal").textContent = networkVal === 'public' ? 'Stellar Public' : 'Stellar Testnet';
+    getElement("metaAssetVal").textContent = asset;
+    getElement("metaNetworkVal").textContent = networkVal;
+    setCardStatusDot("awaiting");
+    const payBtn = document.getElementById("demoPayButton");
+    if (payBtn) {
+        payBtn.className = "pay-button";
+        payBtn.textContent = "Pay with Stellar";
+        payBtn.disabled = false;
+    }
+    updateWebhookPayload("payment.session.created", "awaiting_payment", amount, asset, networkVal);
+}
+// Attach listeners to update views
+getElement("demoAmountInput").addEventListener("input", updateCheckoutDemoFields);
+getElement("demoAssetSelect").addEventListener("change", updateCheckoutDemoFields);
+getElement("demoNetworkSelect").addEventListener("change", updateCheckoutDemoFields);
+// Copy details
+getElement("copyDemoDetails").addEventListener("click", async () => {
+    const copyBtn = getElement("copyDemoDetails");
+    const prevLabel = copyBtn.textContent || "Copy payment details";
+    const amount = getElement("demoAmountInput").value || "45.00";
+    const asset = getElement("demoAssetSelect").value;
+    const network = getElement("demoNetworkSelect").value === 'public' ? 'Stellar Public' : 'Stellar Testnet';
+    try {
+        await navigator.clipboard.writeText(`Send: ${amount} ${asset}\nNetwork: ${network}\nDestination: CC4VBD5EBGTEJQ7YAHU3MVP7SP2JNCQX6M6NPVZV4LQWF3N9QP\nMemo: ORBIT-1042`);
+        copyBtn.textContent = "Copied!";
+    }
+    catch {
+        copyBtn.textContent = "Copy failed";
+    }
+    window.setTimeout(() => {
+        copyBtn.textContent = prevLabel;
+    }, 1600);
 });
+// Launch demo click helper
 getElement("newSession").addEventListener("click", () => {
-    showView("funding");
+    showView("checkout");
 });
-// Freighter Wallet Simulator Modal
+// Stepper Timeline states
+function setDevTimelineState(created, awaiting, funded, settled) {
+    getElement("devStepCreated").setAttribute("data-status", created);
+    getElement("devStepAwaiting").setAttribute("data-status", awaiting);
+    getElement("devStepFunded").setAttribute("data-status", funded);
+    getElement("devStepSettled").setAttribute("data-status", settled);
+}
+// Run interactive simulation of payment (Acts like an automated movie walkthrough if autoApprove = true)
+let isSimulating = false;
+async function runPaymentSimulation(autoApprove = false) {
+    if (isSimulating)
+        return;
+    isSimulating = true;
+    const amount = getElement("demoAmountInput").value || "45.00";
+    const asset = getElement("demoAssetSelect").value;
+    const networkVal = getElement("demoNetworkSelect").value;
+    const triggerBtn = document.getElementById("triggerDemoInteractiveBtn");
+    const payBtn = document.getElementById("demoPayButton");
+    if (triggerBtn) {
+        triggerBtn.disabled = true;
+        triggerBtn.textContent = "Simulating transaction...";
+    }
+    // Phase 1: Reset timeline, webhook panel, and card states to Created / Awaiting
+    setDevTimelineState("complete", "active", "pending", "pending");
+    updateWebhookStatus("sending", "created");
+    updateWebhookPayload("payment.session.created", "awaiting_payment", amount, asset, networkVal);
+    setCardStatusDot("awaiting");
+    if (payBtn) {
+        payBtn.className = "pay-button";
+        payBtn.textContent = "Pay with Stellar";
+        payBtn.disabled = true;
+    }
+    addActivityLog(`Session op_sess_1042 created for <strong>${amount} ${asset}</strong>`);
+    // If autoApprove = true (triggered via "Try demo session"), auto-animate Freighter Wallet interaction
+    if (autoApprove) {
+        await new Promise(r => setTimeout(r, 1200));
+        if (payBtn) {
+            payBtn.className = "pay-button connecting";
+            payBtn.textContent = "Connecting Freighter...";
+        }
+        addActivityLog("Handshaking with Freighter browser wallet extension...");
+        await new Promise(r => setTimeout(r, 1500));
+        const modalMerchant = document.getElementById("modalMerchant");
+        if (modalMerchant)
+            modalMerchant.textContent = "Atlas Studio";
+        const modalInvoice = document.getElementById("modalInvoice");
+        if (modalInvoice)
+            modalInvoice.textContent = "OP-1042";
+        const modalAmount = document.getElementById("modalAmount");
+        if (modalAmount)
+            modalAmount.textContent = `${amount} ${asset}`;
+        modalOverlay.classList.add("active");
+        addActivityLog("Freighter prompt opened: awaiting signature...");
+        // Auto sign transition
+        await new Promise(r => setTimeout(r, 1800));
+        if (approveBtn) {
+            approveBtn.textContent = "Signing...";
+            approveBtn.disabled = true;
+        }
+        addActivityLog("Signature approved in Freighter modal.");
+        await new Promise(r => setTimeout(r, 1000));
+        closeFreighterModal();
+        if (approveBtn) {
+            approveBtn.textContent = "Approve Sign";
+            approveBtn.disabled = false;
+        }
+        if (payBtn) {
+            payBtn.className = "pay-button success";
+            payBtn.textContent = "✓ Transaction Signed";
+        }
+    }
+    // Phase 2: Detecting Payment (Step 2: Funded)
+    await new Promise(r => setTimeout(r, 1500));
+    setDevTimelineState("complete", "complete", "active", "pending");
+    updateWebhookStatus("sending", "funded");
+    updateWebhookPayload("payment.session.funded", "payment_received", amount, asset, networkVal);
+    setCardStatusDot("funded");
+    addActivityLog(`Stellar payment detected on ledger for <strong>${amount} ${asset}</strong>`);
+    // Phase 3: Smart Account Onboarding (Step 3: Settled)
+    await new Promise(r => setTimeout(r, 1800));
+    setDevTimelineState("complete", "complete", "complete", "complete");
+    updateWebhookStatus("success", "settled");
+    updateWebhookPayload("payment.session.settled", "settled", amount, asset, networkVal);
+    setCardStatusDot("settled");
+    if (payBtn) {
+        payBtn.className = "pay-button success";
+        payBtn.textContent = "✓ Session Settled";
+    }
+    addActivityLog(`Onboarding settled via Soroban smart contract: <strong>${amount} ${asset}</strong>`);
+    triggerConfetti();
+    if (triggerBtn) {
+        triggerBtn.disabled = false;
+        triggerBtn.textContent = "Try demo session";
+    }
+    if (payBtn)
+        payBtn.disabled = false;
+    isSimulating = false;
+}
+// Freighter modal overlay triggers
 const modalOverlay = document.getElementById("walletModalOverlay");
-const freighterBtn = document.getElementById("simulateFreighterPay");
+const demoPayBtn = document.getElementById("demoPayButton");
 const closeBtn = document.getElementById("closeWalletModal");
 const cancelBtn = document.getElementById("cancelPayment");
 const approveBtn = document.getElementById("approvePayment");
-if (freighterBtn && modalOverlay) {
-    freighterBtn.addEventListener("click", () => {
-        const merchant = getElement("merchantInput").value.trim() || "Atlas Studio";
-        const invoice = getElement("invoiceInput").value.trim() || "OP-1042";
-        const amount = getElement("checkoutInput").value.trim() || "45.00";
+if (demoPayBtn && modalOverlay) {
+    demoPayBtn.addEventListener("click", () => {
+        const amount = getElement("demoAmountInput").value || "45.00";
+        const asset = getElement("demoAssetSelect").value;
         const modalMerchant = document.getElementById("modalMerchant");
         if (modalMerchant)
-            modalMerchant.textContent = merchant;
+            modalMerchant.textContent = "Atlas Studio";
         const modalInvoice = document.getElementById("modalInvoice");
         if (modalInvoice)
-            modalInvoice.textContent = invoice;
+            modalInvoice.textContent = "OP-1042";
         const modalAmount = document.getElementById("modalAmount");
         if (modalAmount)
-            modalAmount.textContent = `${amount} USDC`;
+            modalAmount.textContent = `${amount} ${asset}`;
         modalOverlay.classList.add("active");
     });
 }
@@ -325,9 +477,7 @@ if (closeBtn)
 if (cancelBtn) {
     cancelBtn.addEventListener("click", () => {
         closeFreighterModal();
-        const result = getElement("intentResult");
-        result.textContent = "Signature rejected by Freighter Wallet.";
-        result.className = "result-strip";
+        addActivityLog("Signature rejected by user wallet.");
     });
 }
 if (approveBtn) {
@@ -339,13 +489,18 @@ if (approveBtn) {
             approveBtn.textContent = prevText;
             approveBtn.disabled = false;
             closeFreighterModal();
-            const result = getElement("intentResult");
-            result.textContent = "Payment signed and settled via Soroban contract!";
-            result.className = "result-strip success";
-            const invoice = getElement("invoiceInput").value.trim() || "OP-1042";
-            addActivityLog(`Wallet settled invoice <strong>${invoice}</strong> on chain`);
-            triggerConfetti();
-        }, 1200);
+            runPaymentSimulation(false); // Manual approval doesn't require auto wallet connection animations
+        }, 1000);
+    });
+}
+// Trigger simulation on CTA click
+const triggerDemoBtn = document.getElementById("triggerDemoInteractiveBtn");
+if (triggerDemoBtn) {
+    triggerDemoBtn.addEventListener("click", () => {
+        // Reset status first
+        setDevTimelineState("complete", "active", "pending", "pending");
+        updateWebhookStatus("pending", "created");
+        runPaymentSimulation(true); // Enable autoApprove for automated movie demo
     });
 }
 // -------------------------------------------------------------
@@ -440,6 +595,37 @@ function initCardTilt(selector) {
 }
 initCardTilt(".hero-visual");
 initCardTilt(".payment-card");
-initCardTilt(".checkout-card");
+initCardTilt(".checkout-card-preview");
+// Hero Card Event Handlers
+const heroCopyBtn = document.getElementById("heroCopyDetails");
+if (heroCopyBtn) {
+    heroCopyBtn.addEventListener("click", async () => {
+        try {
+            await navigator.clipboard.writeText("Destination: CC4VBD5EBGTEJQ7YAHU3MVP7SP2JNCQX6M6NPVZV4LQWF3N9QP\nMemos: ORBIT-1042\nAmount: 45.00 USDC");
+            heroCopyBtn.textContent = "Copied!";
+        }
+        catch {
+            heroCopyBtn.textContent = "Error";
+        }
+        window.setTimeout(() => {
+            heroCopyBtn.textContent = "Copy details";
+        }, 1500);
+    });
+}
+const heroPayBtn = document.getElementById("heroPayStellar");
+if (heroPayBtn && modalOverlay) {
+    heroPayBtn.addEventListener("click", () => {
+        const modalMerchant = document.getElementById("modalMerchant");
+        if (modalMerchant)
+            modalMerchant.textContent = "Atlas Studio";
+        const modalInvoice = document.getElementById("modalInvoice");
+        if (modalInvoice)
+            modalInvoice.textContent = "OP-1042";
+        const modalAmount = document.getElementById("modalAmount");
+        if (modalAmount)
+            modalAmount.textContent = "45.00 USDC";
+        modalOverlay.classList.add("active");
+    });
+}
 updateFundingInstructions();
 addActivityLog("Developer Dashboard initialized successfully.");

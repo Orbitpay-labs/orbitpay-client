@@ -30,7 +30,7 @@ try {
   const response = await waitForDemo();
   const html = await response.text();
 
-  if (!html.includes("Simple C-address payments for apps built on Stellar.")) {
+  if (!html.includes("Stellar checkout and C-address funding, without the wallet confusion.")) {
     throw new Error("Landing page hero is missing from demo HTML");
   }
 
