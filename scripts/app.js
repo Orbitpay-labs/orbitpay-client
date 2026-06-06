@@ -302,57 +302,36 @@ function setCardStatusDot(status) {
         dot.textContent = "Settled";
     }
 }
-function updateCheckoutDemoFields() {
-    const amount = getElement("demoAmountInput").value || "45.00";
-    const asset = getElement("demoAssetSelect").value;
-    const networkVal = getElement("demoNetworkSelect").value;
-    getElement("cardAmountVal").textContent = amount;
-    getElement("cardAssetVal").textContent = asset;
-    getElement("cardAssetLogo").textContent = asset;
-    getElement("cardNetworkVal").textContent = networkVal === 'public' ? 'Stellar Public' : 'Stellar Testnet';
-    getElement("metaAssetVal").textContent = asset;
-    getElement("metaNetworkVal").textContent = networkVal;
-    setCardStatusDot("awaiting");
-    const payBtn = document.getElementById("demoPayButton");
-    if (payBtn) {
-        payBtn.className = "pay-button";
-        payBtn.textContent = "Pay with Stellar";
-        payBtn.disabled = false;
-    }
-    updateWebhookPayload("payment.session.created", "awaiting_payment", amount, asset, networkVal);
-}
-// Attach listeners to update views
-getElement("demoAmountInput").addEventListener("input", updateCheckoutDemoFields);
-getElement("demoAssetSelect").addEventListener("change", updateCheckoutDemoFields);
-getElement("demoNetworkSelect").addEventListener("change", updateCheckoutDemoFields);
-// Copy details
-getElement("copyDemoDetails").addEventListener("click", async () => {
-    const copyBtn = getElement("copyDemoDetails");
-    const prevLabel = copyBtn.textContent || "Copy payment details";
-    const amount = getElement("demoAmountInput").value || "45.00";
-    const asset = getElement("demoAssetSelect").value;
-    const network = getElement("demoNetworkSelect").value === 'public' ? 'Stellar Public' : 'Stellar Testnet';
-    try {
-        await navigator.clipboard.writeText(`Send: ${amount} ${asset}\nNetwork: ${network}\nDestination: CC4VBD5EBGTEJQ7YAHU3MVP7SP2JNCQX6M6NPVZV4LQWF3N9QP\nMemo: ORBIT-1042`);
-        copyBtn.textContent = "Copied!";
-    }
-    catch {
-        copyBtn.textContent = "Copy failed";
-    }
-    window.setTimeout(() => {
-        copyBtn.textContent = prevLabel;
-    }, 1600);
-});
+// Demo hardcoded values (inputs removed for cleaner auto-play demo)
+const DEMO_AMOUNT = "45.00";
+const DEMO_ASSET = "USDC";
+const DEMO_NETWORK = "testnet";
 // Launch demo click helper
 getElement("newSession").addEventListener("click", () => {
     showView("checkout");
 });
+function updateStepIndicator(id, status, defaultSymbol) {
+    const stepEl = getElement(id);
+    stepEl.setAttribute("data-status", status);
+    const indicator = stepEl.querySelector(".step-indicator");
+    if (indicator) {
+        if (status === "complete") {
+            indicator.textContent = "✓";
+        }
+        else if (status === "active") {
+            indicator.textContent = "●";
+        }
+        else {
+            indicator.textContent = defaultSymbol;
+        }
+    }
+}
 // Stepper Timeline states
 function setDevTimelineState(created, awaiting, funded, settled) {
-    getElement("devStepCreated").setAttribute("data-status", created);
-    getElement("devStepAwaiting").setAttribute("data-status", awaiting);
-    getElement("devStepFunded").setAttribute("data-status", funded);
-    getElement("devStepSettled").setAttribute("data-status", settled);
+    updateStepIndicator("devStepCreated", created, "✓");
+    updateStepIndicator("devStepAwaiting", awaiting, "○");
+    updateStepIndicator("devStepFunded", funded, "○");
+    updateStepIndicator("devStepSettled", settled, "○");
 }
 // Run interactive simulation of payment (Acts like an automated movie walkthrough if autoApprove = true)
 let isSimulating = false;
@@ -360,15 +339,10 @@ async function runPaymentSimulation(autoApprove = false) {
     if (isSimulating)
         return;
     isSimulating = true;
-    const amount = getElement("demoAmountInput").value || "45.00";
-    const asset = getElement("demoAssetSelect").value;
-    const networkVal = getElement("demoNetworkSelect").value;
-    const triggerBtn = document.getElementById("triggerDemoInteractiveBtn");
+    const amount = DEMO_AMOUNT;
+    const asset = DEMO_ASSET;
+    const networkVal = DEMO_NETWORK;
     const payBtn = document.getElementById("demoPayButton");
-    if (triggerBtn) {
-        triggerBtn.disabled = true;
-        triggerBtn.textContent = "Simulating transaction...";
-    }
     // Phase 1: Reset timeline, webhook panel, and card states to Created / Awaiting
     setDevTimelineState("complete", "active", "pending", "pending");
     updateWebhookStatus("sending", "created");
@@ -380,7 +354,7 @@ async function runPaymentSimulation(autoApprove = false) {
         payBtn.disabled = true;
     }
     addActivityLog(`Session op_sess_1042 created for <strong>${amount} ${asset}</strong>`);
-    // If autoApprove = true (triggered via "Try demo session"), auto-animate Freighter Wallet interaction
+    // If autoApprove = true (triggered automatically), auto-animate Freighter Wallet interaction
     if (autoApprove) {
         await new Promise(r => setTimeout(r, 1200));
         if (payBtn) {
@@ -437,10 +411,6 @@ async function runPaymentSimulation(autoApprove = false) {
     }
     addActivityLog(`Onboarding settled via Soroban smart contract: <strong>${amount} ${asset}</strong>`);
     triggerConfetti();
-    if (triggerBtn) {
-        triggerBtn.disabled = false;
-        triggerBtn.textContent = "Try demo session";
-    }
     if (payBtn)
         payBtn.disabled = false;
     isSimulating = false;
@@ -453,8 +423,8 @@ const cancelBtn = document.getElementById("cancelPayment");
 const approveBtn = document.getElementById("approvePayment");
 if (demoPayBtn && modalOverlay) {
     demoPayBtn.addEventListener("click", () => {
-        const amount = getElement("demoAmountInput").value || "45.00";
-        const asset = getElement("demoAssetSelect").value;
+        const amount = DEMO_AMOUNT;
+        const asset = DEMO_ASSET;
         const modalMerchant = document.getElementById("modalMerchant");
         if (modalMerchant)
             modalMerchant.textContent = "Atlas Studio";
@@ -493,15 +463,50 @@ if (approveBtn) {
         }, 1000);
     });
 }
-// Trigger simulation on CTA click
-const triggerDemoBtn = document.getElementById("triggerDemoInteractiveBtn");
-if (triggerDemoBtn) {
-    triggerDemoBtn.addEventListener("click", () => {
+// Auto loop movie demo
+let autoplayTimer = null;
+function stopAutoplay() {
+    if (autoplayTimer) {
+        window.clearTimeout(autoplayTimer);
+        autoplayTimer = null;
+    }
+}
+function startAutoplayLoop() {
+    stopAutoplay();
+    async function tick() {
+        if (isSimulating) {
+            autoplayTimer = window.setTimeout(tick, 1000);
+            return;
+        }
         // Reset status first
         setDevTimelineState("complete", "active", "pending", "pending");
         updateWebhookStatus("pending", "created");
-        runPaymentSimulation(true); // Enable autoApprove for automated movie demo
-    });
+        // Run simulation
+        await runPaymentSimulation(true);
+        // Once settled, wait 6 seconds and then run again
+        autoplayTimer = window.setTimeout(tick, 6000);
+    }
+    // Start the first loop after 2 seconds
+    autoplayTimer = window.setTimeout(tick, 2000);
+}
+// Trigger simulation when scrolled into view
+const checkoutSection = document.getElementById("checkout");
+if (checkoutSection && 'IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                startAutoplayLoop();
+            }
+            else {
+                stopAutoplay();
+            }
+        });
+    }, { threshold: 0.25 });
+    observer.observe(checkoutSection);
+}
+else {
+    // Fallback if IntersectionObserver is not supported
+    startAutoplayLoop();
 }
 // -------------------------------------------------------------
 // SDK Tabs switching logic
@@ -629,3 +634,35 @@ if (heroPayBtn && modalOverlay) {
 }
 updateFundingInstructions();
 addActivityLog("Developer Dashboard initialized successfully.");
+function initFaqAccordion() {
+    const faqItems = document.querySelectorAll(".faq-item");
+    faqItems.forEach((item) => {
+        const question = item.querySelector(".faq-question");
+        if (!question)
+            return;
+        question.setAttribute("role", "button");
+        question.setAttribute("tabindex", "0");
+        question.setAttribute("aria-expanded", item.classList.contains("open").toString());
+        const toggleItem = () => {
+            const isOpening = !item.classList.contains("open");
+            faqItems.forEach((otherItem) => {
+                otherItem.classList.remove("open");
+                otherItem.querySelector(".faq-question")?.setAttribute("aria-expanded", "false");
+            });
+            if (isOpening) {
+                item.classList.add("open");
+                question.setAttribute("aria-expanded", "true");
+            }
+        };
+        question.addEventListener("click", () => {
+            toggleItem();
+        });
+        question.addEventListener("keydown", (event) => {
+            if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                toggleItem();
+            }
+        });
+    });
+}
+initFaqAccordion();

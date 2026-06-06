@@ -381,12 +381,27 @@ getElement<HTMLButtonElement>("newSession").addEventListener("click", () => {
   showView("checkout");
 });
 
+function updateStepIndicator(id: string, status: string, defaultSymbol: string) {
+  const stepEl = getElement<HTMLElement>(id);
+  stepEl.setAttribute("data-status", status);
+  const indicator = stepEl.querySelector(".step-indicator");
+  if (indicator) {
+    if (status === "complete") {
+      indicator.textContent = "✓";
+    } else if (status === "active") {
+      indicator.textContent = "●";
+    } else {
+      indicator.textContent = defaultSymbol;
+    }
+  }
+}
+
 // Stepper Timeline states
 function setDevTimelineState(created: string, awaiting: string, funded: string, settled: string) {
-  getElement<HTMLElement>("devStepCreated").setAttribute("data-status", created);
-  getElement<HTMLElement>("devStepAwaiting").setAttribute("data-status", awaiting);
-  getElement<HTMLElement>("devStepFunded").setAttribute("data-status", funded);
-  getElement<HTMLElement>("devStepSettled").setAttribute("data-status", settled);
+  updateStepIndicator("devStepCreated", created, "✓");
+  updateStepIndicator("devStepAwaiting", awaiting, "○");
+  updateStepIndicator("devStepFunded", funded, "○");
+  updateStepIndicator("devStepSettled", settled, "○");
 }
 
 // Run interactive simulation of payment (Acts like an automated movie walkthrough if autoApprove = true)
@@ -719,3 +734,43 @@ if (heroPayBtn && modalOverlay) {
 
 updateFundingInstructions();
 addActivityLog("Developer Dashboard initialized successfully.");
+
+function initFaqAccordion(): void {
+  const faqItems = document.querySelectorAll<HTMLElement>(".faq-item");
+
+  faqItems.forEach((item) => {
+    const question = item.querySelector<HTMLElement>(".faq-question");
+    if (!question) return;
+
+    question.setAttribute("role", "button");
+    question.setAttribute("tabindex", "0");
+    question.setAttribute("aria-expanded", item.classList.contains("open").toString());
+
+    const toggleItem = () => {
+      const isOpening = !item.classList.contains("open");
+
+      faqItems.forEach((otherItem) => {
+        otherItem.classList.remove("open");
+        otherItem.querySelector<HTMLElement>(".faq-question")?.setAttribute("aria-expanded", "false");
+      });
+
+      if (isOpening) {
+        item.classList.add("open");
+        question.setAttribute("aria-expanded", "true");
+      }
+    };
+
+    question.addEventListener("click", () => {
+      toggleItem();
+    });
+
+    question.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        toggleItem();
+      }
+    });
+  });
+}
+
+initFaqAccordion();

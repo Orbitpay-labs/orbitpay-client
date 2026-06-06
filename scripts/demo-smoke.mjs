@@ -34,8 +34,15 @@ try {
     throw new Error("Landing page hero is missing from demo HTML");
   }
 
-  if (!html.includes("Copyable Stellar Testnet details") || !html.includes('id="copyInstructions"')) {
-    throw new Error("Funding instruction card is missing from demo HTML");
+  if (
+    !html.includes("Payment sessions for apps that need clean Stellar checkout.") ||
+    !html.includes('id="copyInstructions"')
+  ) {
+    throw new Error("Builder payment session demo is missing from demo HTML");
+  }
+
+  if (!html.includes("Clear answers for Stellar checkout builders.")) {
+    throw new Error("FAQ section is missing from demo HTML");
   }
 
   console.log("Client demo smoke test passed.");

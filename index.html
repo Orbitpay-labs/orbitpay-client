@@ -4,14 +4,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>OrbitPay Kit — Stellar Smart Account Onboarding</title>
+  <title>OrbitPay Kit - Stellar Checkout Toolkit</title>
   <meta name="description"
     content="OrbitPay provides a responsive Stellar C-address checkout and smart-account funding UI. Guide users seamlessly from wallets to Soroban contracts." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="styles.css" />
   <link rel="icon" type="image/svg+xml"
-    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none'%3E%3Cpath d='M 144 256 L 27.598 256 L 144 139.598 Z M 256 207.5 L 200 256 L 200 56 L 0 56 L 48 0 L 256 0 Z M 0 204.402 L 0 112 L 92.402 112 Z' fill='%238b5cf6'%3E%3C/path%3E%3C/svg%3E" />
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none'%3E%3Cpath d='M 144 256 L 27.598 256 L 144 139.598 Z M 256 207.5 L 200 256 L 200 56 L 0 56 L 48 0 L 256 0 Z M 0 204.402 L 0 112 L 92.402 112 Z' fill='%232f54eb'%3E%3C/path%3E%3C/svg%3E" />
 </head>
 
 <body>
@@ -48,7 +48,7 @@
       <div class="hero-copy">
         <div class="eyebrow-badge">
           <span class="badge-dot"></span>
-          <span class="badge-text">Stellar payment MVP</span>
+          <span class="badge-text">Open-source Stellar checkout kit</span>
         </div>
         <h1>Stellar checkout and C-address funding, without the wallet confusion.</h1>
         <p class="lede">
@@ -60,7 +60,7 @@
           <a class="ghost-button" href="https://github.com/Orbitpay-labs" target="_blank" rel="noreferrer">View
             GitHub</a>
         </div>
-        <p class="trust-line">Open-source toolkit for Stellar/Soroban builders.</p>
+        <!-- <p class="trust-line">Stellar checkout kit</p> -->
       </div>
 
       <div class="hero-visual" aria-label="OrbitPay payment preview">
@@ -106,106 +106,65 @@
     </section>
 
     <section class="section how-it-works-section" id="how-it-works">
-      <div class="section-heading" style="text-align: left; margin-bottom: 56px;">
-        <div class="simple-steps-badge">Simple Steps</div>
-        <h2>How it works</h2>
-        <p class="lede" style="margin-top: 8px; max-width: 680px;">
-          Create a payment session, guide the user through Stellar funding, then track the payment status from your app.
-        </p>
-      </div>
+      <div class="how-works-grid-bg" aria-hidden="true"></div>
+      <div class="how-works-grid">
+        <!-- Column 1: Heading & Step 1 -->
+        <div class="how-works-col col-1">
+          <div class="section-heading" style="text-align: left; margin-bottom: 40px;">
+            <div class="simple-steps-badge">Simple Steps</div>
+            <h2 class="staggered-heading">How it works</h2>
+            <p class="lede" style="margin-top: 8px; max-width: 680px; font-family: var(--font-body); font-size: 0.95rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 24px;">
+              Create a payment session, guide the user through Stellar funding, then track the payment status from your app.
+            </p>
+          </div>
 
-      <div class="how-works-split">
-        <!-- Left Side: Product Illustration / Code / Status Overlays -->
-        <div class="works-visual-side">
-          <div class="main-visual-window">
-            <!-- Simulated API Response -->
-            <div class="simulated-code-card">
-              <div class="window-dot-bar">
-                <span class="window-dot red"></span>
-                <span class="window-dot yellow"></span>
-                <span class="window-dot green"></span>
-                <span class="window-tab">session.json</span>
+          <div class="notched-card" data-step="1">
+            <div class="notched-card-inner">
+              <div class="card-header">
+                <span class="card-eyebrow">API / SESSION INITIATION</span>
               </div>
-              <div class="code-method"><span class="method-post">POST</span> /sessions</div>
-              <pre><code>{
-  "amount": "45.00",
-  "asset": "USDC",
-  "status": "awaiting_payment"
-}</code></pre>
-            </div>
-            <!-- Floating Checkout status card overlapping -->
-            <div class="floating-status-card">
-              <div class="receipt-header">
-                <span class="receipt-logo">OP</span>
-                <div class="receipt-title">
-                  <strong>Checkout OP-1042</strong>
-                  <span>Stellar Checkout</span>
-                </div>
-                <span class="status-indicator-dot"></span>
-              </div>
-              <div class="receipt-divider"></div>
-              <div class="receipt-body">
-                <div class="receipt-row">
-                  <span>Amount</span>
-                  <strong class="receipt-amount">$45.00</strong>
-                </div>
-                <div class="receipt-row">
-                  <span>Status</span>
-                  <span class="receipt-status-badge">Awaiting payment</span>
-                </div>
+              <div class="card-body">
+                <span class="card-step-num">01</span>
+                <h3>1. Create a session</h3>
+                <p>Your app creates a payment or funding session with amount, asset, destination, and memo.</p>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Right Side: Vertical Timeline -->
-        <div class="works-timeline-side">
-          <div class="timeline-container">
-            <div class="timeline-line"></div>
-
-            <div class="timeline-step active">
-              <div class="step-icon-wrapper">
-                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5">
-                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                  <line x1="9" y1="9" x2="15" y2="9"></line>
-                  <line x1="9" y1="13" x2="15" y2="13"></line>
-                  <line x1="9" y1="17" x2="13" y2="17"></line>
-                </svg>
+        <!-- Column 2: Step 2 -->
+        <div class="how-works-col col-2">
+          <div class="notched-card" data-step="2">
+            <div class="notched-card-inner">
+              <div class="card-header">
+                <span class="card-eyebrow">USER INTERFACE</span>
               </div>
-              <div class="step-content">
-                <h3>1. Create a session</h3>
-                <p>Your app creates a payment or funding session with amount, asset, destination, and memo.</p>
-              </div>
-            </div>
-
-            <div class="timeline-step">
-              <div class="step-icon-wrapper">
-                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5">
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                  <polyline points="14 2 14 8 20 8"></polyline>
-                  <line x1="16" y1="13" x2="8" y2="13"></line>
-                  <line x1="16" y1="17" x2="8" y2="17"></line>
-                  <polyline points="10 9 9 9 8 9"></polyline>
-                </svg>
-              </div>
-              <div class="step-content">
+              <div class="card-body">
+                <span class="card-step-num">02</span>
                 <h3>2. Show clear payment instructions</h3>
                 <p>OrbitPay gives the user a simple checkout screen with exactly what to send and where to send it.</p>
               </div>
             </div>
+          </div>
+        </div>
 
-            <div class="timeline-step">
-              <div class="step-icon-wrapper">
-                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5">
-                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                  <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                </svg>
+        <!-- Column 3: Step 3 -->
+        <div class="how-works-col col-3">
+          <div class="notched-card" data-step="3">
+            <div class="notched-card-inner">
+              <div class="card-header">
+                <span class="card-eyebrow">SETTLEMENT / WEBHOOKS</span>
               </div>
-              <div class="step-content">
+              <div class="card-body">
+                <span class="card-step-num">03</span>
                 <h3>3. Track settlement</h3>
                 <p>Your backend can monitor payment status and send updates when the session is funded or settled.</p>
               </div>
             </div>
+          </div>
+
+          <div class="how-works-trust-footer">
+            <p>Trusted by leading builders and integrated seamlessly on Stellar.</p>
           </div>
         </div>
       </div>
@@ -328,256 +287,127 @@
         </div>
       </div>
     </section>
-
-    <section class="section intro-section" id="solution">
-      <div class="intro-copy">
-        <p class="eyebrow">The friction</p>
-        <h2>Standard payment flows fail on smart account onboarding.</h2>
-        <p class="lede" style="margin-top: 16px;">
-          OrbitPay sits between merchant apps, Stellar wallets, and Soroban smart accounts. It turns
-          complex technical routing into a familiar, guided checkout experience.
-        </p>
-      </div>
-      <div class="comparison-grid">
-        <div class="comparison-card friction">
-          <div class="comparison-badge">🔴 High Friction</div>
-          <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 20px;">Direct Blockchain Transfer</h3>
-          <ul class="comparison-list">
-            <li class="comparison-item">
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#ef4444" stroke-width="3"
-                stroke-linecap="round" stroke-linejoin="round">
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-              </svg>
-              <span>Manual public key copy &amp; paste</span>
-            </li>
-            <li class="comparison-item">
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#ef4444" stroke-width="3"
-                stroke-linecap="round" stroke-linejoin="round">
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-              </svg>
-              <span>Easy to forget memo, risking lost funds</span>
-            </li>
-            <li class="comparison-item">
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#ef4444" stroke-width="3"
-                stroke-linecap="round" stroke-linejoin="round">
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-              </svg>
-              <span>No real-time payment status tracking</span>
-            </li>
-            <li class="comparison-item">
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#ef4444" stroke-width="3"
-                stroke-linecap="round" stroke-linejoin="round">
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-              </svg>
-              <span>Requires managing gas fees &amp; trustlines</span>
-            </li>
-          </ul>
+    <section class="section builders-section view" id="funding">
+      <div class="builders-glass-shell">
+        <div class="builders-header">
+          <p class="builders-kicker">Designed for Stellar builders</p>
+          <h2>Payment sessions for apps that need clean Stellar checkout.</h2>
         </div>
-        <div class="comparison-card seamless">
-          <div class="comparison-badge">🟢 OrbitPay Path</div>
-          <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 20px;">Guided Onboarding Flow</h3>
-          <ul class="comparison-list">
-            <li class="comparison-item">
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#10b981" stroke-width="3"
-                stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="20 6 9 17 4 12"></polyline>
-              </svg>
-              <span>1-click copy details &amp; deep-linking</span>
-            </li>
-            <li class="comparison-item">
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#10b981" stroke-width="3"
-                stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="20 6 9 17 4 12"></polyline>
-              </svg>
-              <span>Pre-filled memo verification built-in</span>
-            </li>
-            <li class="comparison-item">
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#10b981" stroke-width="3"
-                stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="20 6 9 17 4 12"></polyline>
-              </svg>
-              <span>Real-time UI &amp; Webhook status updates</span>
-            </li>
-            <li class="comparison-item">
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#10b981" stroke-width="3"
-                stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="20 6 9 17 4 12"></polyline>
-              </svg>
-              <span>Gasless smart-account onboarding options</span>
-            </li>
-          </ul>
+
+        <div class="builder-capabilities" aria-label="OrbitPay builder capabilities">
+          <div class="builder-capability">
+            <span class="capability-glyph"><i data-lucide="webhook"></i></span>
+            <strong>Session API</strong>
+          </div>
+          <div class="builder-capability">
+            <span class="capability-glyph"><i data-lucide="banknote"></i></span>
+            <strong>Funding details</strong>
+          </div>
+          <div class="builder-capability">
+            <span class="capability-glyph"><i data-lucide="route"></i></span>
+            <strong>C-address flow</strong>
+          </div>
+          <div class="builder-capability">
+            <span class="capability-glyph"><i data-lucide="radio"></i></span>
+            <strong>Status webhooks</strong>
+          </div>
         </div>
-      </div>
-    </section>
 
-
-    <section class="section view" id="funding">
-      <div class="section-heading">
-        <p class="eyebrow">Interactive Demo</p>
-        <h2>Try the funding &amp; onboarding simulator</h2>
-      </div>
-
-      <div class="demo-panel">
-        <div class="demo-copy">
-          <p class="eyebrow">MVP demo</p>
-          <h3>Create a test funding session</h3>
+        <div class="builder-fix-card">
+          <h3>OrbitPay fixes this.</h3>
           <p>
-            This keeps the GrantFox submission demo honest: focused scope, visible behavior, and a clear
-            path to real Stellar payment tracking.
+            Give your app a checkout session, copyable Stellar payment details, and a simple way to track when a user
+            moves from awaiting payment to funded or settled.
           </p>
         </div>
-        <div class="funding-form">
-          <label>
-            Asset
-            <select id="assetSelect">
-              <option>USDC</option>
-              <option>XLM</option>
-              <option>EURC</option>
-            </select>
-          </label>
-          <label>
-            Amount
-            <input id="amountInput" value="45.00" inputmode="decimal" />
-          </label>
-          <button class="primary-button compact" id="simulateFunding">Simulate funding</button>
-        </div>
-        <div class="result-strip" id="fundingResult" style="grid-column: 2 / -1;">Ready to create a testnet funding
-          session.</div>
-
-        <!-- Interactive Stepper Progress -->
-        <div style="grid-column: 1 / -1; margin-top: 10px;">
-          <div class="stepper-progress">
-            <div class="step-progress-fill" id="stepProgressFill"></div>
-            <div class="step active" id="step1">
-              <span class="step-num">1</span>
-              <span class="step-label">Session Init</span>
-            </div>
-            <div class="step" id="step2">
-              <span class="step-num">2</span>
-              <span class="step-label">Awaiting Payment</span>
-            </div>
-            <div class="step" id="step3">
-              <span class="step-num">3</span>
-              <span class="step-label">Settled</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Live Activity Log -->
-        <div class="live-activity-container" style="grid-column: 1 / -1;">
-          <div class="live-activity-header">
-            <div class="live-activity-title">
-              <span class="live-pulse-dot"></span>
-              Live Ledger Activity
-            </div>
-            <span style="font-size: 0.7rem; color: var(--text-muted); font-family: var(--font-mono);"
-              id="liveLedgerNum">Ledger #489201</span>
-          </div>
-          <div class="live-activity-feed" id="liveActivityFeed">
-            <!-- Activities will be inserted dynamically here -->
-          </div>
-        </div>
       </div>
 
-
-      <div class="instruction-card" aria-label="Funding instruction card">
-        <div class="instruction-topline">
-          <div>
-            <p class="eyebrow">Funding instructions</p>
-            <h3>Copyable Stellar Testnet details</h3>
-          </div>
-          <span class="instruction-badge">Ready</span>
-        </div>
-        <dl class="instruction-grid">
-          <div>
-            <dt>Send</dt>
-            <dd id="instructionAmount">45.00 USDC</dd>
-          </div>
-          <div>
-            <dt>Network</dt>
-            <dd id="instructionNetwork">Stellar Testnet</dd>
-          </div>
-          <div class="wide">
-            <dt>Destination C-address</dt>
-            <dd id="instructionDestination">CC4VBD5EBGTEJQ7YAHU3MVP7SP2JNCQX6M6NPVZV4LQWF3N9QP</dd>
-          </div>
-          <div>
-            <dt>Memo</dt>
-            <dd id="instructionMemo">ORBIT-1042</dd>
-          </div>
-        </dl>
-        <div class="instruction-actions">
-          <button class="secondary-button compact" id="copyInstructions">Copy details</button>
-          <a href="https://laboratory.stellar.org/#account-creator?network=test" target="_blank" rel="noreferrer">
-            Open Stellar testnet lab
-          </a>
-        </div>
+      <div class="builder-runtime-hidden" aria-hidden="true">
+        <select id="assetSelect"><option>USDC</option><option>XLM</option><option>EURC</option></select>
+        <input id="amountInput" value="45.00" />
+        <button id="simulateFunding">Simulate funding</button>
+        <div id="fundingResult">Ready to create a testnet funding session.</div>
+        <div id="stepProgressFill"></div>
+        <div id="step1"></div>
+        <div id="step2"></div>
+        <div id="step3"></div>
+        <div id="liveActivityFeed"></div>
+        <div id="liveLedgerNum">Ledger #489201</div>
+        <div id="instructionAmount">45.00 USDC</div>
+        <div id="instructionNetwork">Stellar Testnet</div>
+        <div id="instructionDestination">CC4VBD5EBGTEJQ7YAHU3MVP7SP2JNCQX6M6NPVZV4LQWF3N9QP</div>
+        <div id="instructionMemo">ORBIT-1042</div>
+        <button id="copyInstructions">Copy details</button>
+        <button id="copyCodeButton">Copy</button>
+        <code id="codeToCopy">OrbitPay.createFundingSession({ asset: "USDC", amount: "45.00" })</code>
       </div>
     </section>
 
-    <section class="section sdk-section view" id="sdk">
-      <div class="section-heading">
-        <p class="eyebrow">Developer kit</p>
-        <h2>Small API surface, clear integration story.</h2>
-      </div>
-      <div class="editor-window">
-        <div class="editor-header">
-          <div class="window-controls">
-            <span class="dot red"></span>
-            <span class="dot yellow"></span>
-            <span class="dot green"></span>
-          </div>
-          <div class="editor-tabs">
-            <div class="editor-tab active" data-tab="ts">
-              <span class="tab-icon ts-icon">TS</span>
-              <span class="tab-title">main.ts</span>
-            </div>
-            <div class="editor-tab" data-tab="sh">
-              <span class="tab-icon terminal-icon">$_</span>
-              <span class="tab-title">install.sh</span>
-            </div>
-            <div class="editor-tab" data-tab="js">
-              <span class="tab-icon js-icon" style="color: #f7df1e;">JS</span>
-              <span class="tab-title">webhook.js</span>
-            </div>
-          </div>
-          <button class="copy-code-btn" id="copyCodeButton" aria-label="Copy SDK code to clipboard">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-              stroke-linecap="round" stroke-linejoin="round">
-              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-            </svg>
-            <span>Copy</span>
-          </button>
+    <section class="section faq-section" id="faq">
+      <div class="faq-shell">
+        <div class="faq-heading">
+          <span class="faq-pill">FAQs</span>
+          <h2>Clear answers for Stellar checkout builders.</h2>
         </div>
-        <pre class="code-block"><code id="codeToCopy"><span class="code-keyword">import</span> { <span class="code-variable">OrbitPay</span> } <span class="code-keyword">from</span> <span class="code-string">"@orbitpay/sdk"</span>;
 
-<span class="code-keyword">const</span> <span class="code-variable">session</span> = <span class="code-keyword">await</span> <span class="code-variable">OrbitPay</span>.<span class="code-function">createFundingSession</span>({
-  <span class="code-property">network</span>: <span class="code-string">"testnet"</span>,
-  <span class="code-property">destination</span>: <span class="code-string">"CC4V...N9QP"</span>,
-  <span class="code-property">asset</span>: <span class="code-string">"USDC"</span>,
-  <span class="code-property">amount</span>: <span class="code-string">"45.00"</span>,
-  <span class="code-property">successUrl</span>: <span class="code-string">"https://merchant.app/paid"</span>
-});</code></pre>
+        <div class="faq-list">
+          <article class="faq-item open">
+            <div class="faq-question">
+              <span class="faq-icon"><i data-lucide="circle-help"></i></span>
+              <h3>What does OrbitPay do?</h3>
+              <i data-lucide="chevron-down" class="faq-chevron"></i>
+            </div>
+            <p>
+              OrbitPay helps Stellar and Soroban apps create simple checkout and C-address funding sessions. It shows
+              users the amount, asset, destination, memo, and payment status in a cleaner flow.
+            </p>
+          </article>
+
+          <article class="faq-item">
+            <div class="faq-question">
+              <span class="faq-icon"><i data-lucide="circle-help"></i></span>
+              <h3>Who is OrbitPay built for?</h3>
+              <i data-lucide="chevron-down" class="faq-chevron"></i>
+            </div>
+            <p>
+              OrbitPay is built for Stellar app developers, wallet teams, merchants, and contributors who want cleaner
+              checkout, USDC payment, and Soroban funding experiences.
+            </p>
+          </article>
+
+          <article class="faq-item">
+            <div class="faq-question">
+              <span class="faq-icon"><i data-lucide="circle-help"></i></span>
+              <h3>Is OrbitPay replacing Stellar wallets?</h3>
+              <i data-lucide="chevron-down" class="faq-chevron"></i>
+            </div>
+            <p>
+              No. OrbitPay works beside Stellar wallets. It packages payment instructions, memo details, C-address
+              funding data, and status tracking into a checkout flow users can follow.
+            </p>
+          </article>
+
+          <article class="faq-item">
+            <div class="faq-question">
+              <span class="faq-icon"><i data-lucide="circle-help"></i></span>
+              <h3>What can contributors build next?</h3>
+              <i data-lucide="chevron-down" class="faq-chevron"></i>
+            </div>
+            <p>
+              Contributors can work on wallet adapters, Stellar payment watchers, webhook delivery, Soroban events,
+              persistence, checkout polish, tests, and documentation for builders.
+            </p>
+          </article>
+        </div>
       </div>
-    </section>
-
-    <section class="final-cta">
-      <p class="eyebrow">GrantFox Submission</p>
-      <h2>Built as an MVP for Stellar app builders who need payment onboarding that feels normal.</h2>
-      <button class="primary-button" data-view-link="funding">Try the funding demo</button>
     </section>
   </main>
 
   <footer class="site-footer">
     <div class="footer-top">
       <div class="footer-community">
-        <p class="eyebrow">Join the Community</p>
-        <p class="footer-desc">Follow us as we keep building. Tell us what you think.</p>
+        <p class="eyebrow" style="font-weight: 700;">OrbitPay Labs</p>
+        <p class="footer-desc">Open-source Stellar checkout and C-address funding tools for builders.</p>
       </div>
       <div class="footer-actions">
         <a href="https://github.com/Orbitpay-labs" target="_blank" rel="noreferrer" class="footer-btn github-btn">
@@ -600,17 +430,17 @@
     </div>
     <div class="footer-bottom">
       <div class="footer-brand">
-        <span class="brand-mark" aria-hidden="true" style="width: 24px; height: 24px; border-radius: 6px;">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="none" style="width: 14px; height: 14px;">
+        <span class="footer-logo" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="none">
             <path
               d="M 144 256 L 27.598 256 L 144 139.598 Z M 256 207.5 L 200 256 L 200 56 L 0 56 L 48 0 L 256 0 Z M 0 204.402 L 0 112 L 92.402 112 Z"
               fill="currentColor"></path>
           </svg>
         </span>
-        <strong>OrbitPay Kit</strong>
+        <strong>OrbitPay Labs</strong>
       </div>
       <div class="footer-stellar">
-        Built on Stellar
+        2026 OrbitPay Labs | Built on Stellar
       </div>
     </div>
   </footer>
@@ -620,7 +450,22 @@
   <!-- Canvas for Confetti -->
   <canvas id="confettiCanvas"></canvas>
 
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      lucide.createIcons();
+    });
+  </script>
   <script type="module" src="scripts/app.js"></script>
 </body>
 
 </html>
+
+
+
+
+
+
+
+
+
