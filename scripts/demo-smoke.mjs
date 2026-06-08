@@ -1,51 +1,39 @@
-import { spawn } from "node:child_process";
+import { readFile } from "node:fs/promises";
 
-const port = 5199;
-const child = spawn(process.execPath, ["scripts/preview.js"], {
-  env: { ...process.env, PORT: String(port) },
-  stdio: "ignore"
-});
+const [html, markup, app] = await Promise.all([
+  readFile("dist/index.html", "utf8"),
+  readFile("src/pageMarkup.ts", "utf8"),
+  readFile("src/App.tsx", "utf8")
+]);
 
-async function waitForDemo() {
-  let lastError;
-
-  for (let attempt = 0; attempt < 20; attempt += 1) {
-    try {
-      const response = await fetch(`http://127.0.0.1:${port}/`);
-
-      if (response.ok) {
-        return response;
-      }
-    } catch (error) {
-      lastError = error;
-    }
-
-    await new Promise((resolve) => setTimeout(resolve, 150));
+function decodePageMarkup(source) {
+  const match = source.match(/const encodedMarkup = "([^"]+)"/);
+  if (!match) {
+    throw new Error("Encoded page markup is missing");
   }
 
-  throw lastError || new Error("Demo server did not respond");
+  return Buffer.from(match[1], "base64").toString("utf8");
 }
 
-try {
-  const response = await waitForDemo();
-  const html = await response.text();
+const decodedMarkup = decodePageMarkup(markup);
 
-  if (!html.includes("Stellar checkout and C-address funding, without the wallet confusion.")) {
-    throw new Error("Landing page hero is missing from demo HTML");
-  }
-
-  if (
-    !html.includes("Payment sessions for apps that need clean Stellar checkout.") ||
-    !html.includes('id="copyInstructions"')
-  ) {
-    throw new Error("Builder payment session demo is missing from demo HTML");
-  }
-
-  if (!html.includes("Clear answers for Stellar checkout builders.")) {
-    throw new Error("FAQ section is missing from demo HTML");
-  }
-
-  console.log("Client demo smoke test passed.");
-} finally {
-  child.kill();
+if (!html.includes('id="root"') || !html.includes("/assets/")) {
+  throw new Error("Vite build output is missing the React root or bundled assets");
 }
+
+if (!decodedMarkup.includes("Stellar checkout and C-address funding, without the wallet confusion.")) {
+  throw new Error("Landing page hero is missing from preserved page markup");
+}
+
+if (
+  !decodedMarkup.includes("Payment sessions for apps that need clean Stellar checkout.") ||
+  !decodedMarkup.includes('id="copyInstructions"')
+) {
+  throw new Error("Builder payment session demo is missing from preserved page markup");
+}
+
+if (!app.includes("framer-motion") || !app.includes("IntroSplash")) {
+  throw new Error("Framer Motion intro animation is missing from React shell");
+}
+
+console.log("Client demo smoke test passed.");

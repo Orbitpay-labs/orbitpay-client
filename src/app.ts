@@ -774,3 +774,5 @@ function initFaqAccordion(): void {
 }
 
 initFaqAccordion();
+
+export {};

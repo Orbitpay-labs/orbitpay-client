@@ -3,9 +3,12 @@ import { readFile } from "node:fs/promises";
 const files = [
   "index.html",
   "styles.css",
+  "src/App.tsx",
+  "src/main.tsx",
+  "src/pageMarkup.ts",
   "src/app.ts",
-  "scripts/app.js",
-  "scripts/preview.js"
+  "scripts/preview.js",
+  "vite.config.ts"
 ];
 
 const problems = [];
