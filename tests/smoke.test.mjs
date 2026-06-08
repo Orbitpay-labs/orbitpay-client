@@ -24,10 +24,19 @@ test("existing browser behavior still wires copyable funding details", async () 
   assert.match(app, /fundingDestination/);
 });
 
-test("react shell uses Framer Motion intro without replacing the page markup", async () => {
+test("react shell uses Framer Motion hero reveal without replacing the page markup", async () => {
   const app = await readFile("src/App.tsx", "utf8");
+  const html = await readFile("index.html", "utf8");
 
   assert.match(app, /from "framer-motion"/);
-  assert.match(app, /IntroSplash/);
+  assert.match(app, /useAnimate/);
+  assert.match(app, /\.hero-copy/);
+  assert.match(app, /\.hero-visual/);
+  assert.match(app, /kind === "steps"/);
+  assert.match(app, /kind === "demo"/);
+  assert.match(app, /kind === "builders"/);
+  assert.match(app, /clipPath/);
   assert.match(app, /dangerouslySetInnerHTML/);
+  assert.match(html, /motion-ready/);
+  assert.doesNotMatch(app, /IntroSplash/);
 });

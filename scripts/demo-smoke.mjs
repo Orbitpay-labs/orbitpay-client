@@ -32,8 +32,16 @@ if (
   throw new Error("Builder payment session demo is missing from preserved page markup");
 }
 
-if (!app.includes("framer-motion") || !app.includes("IntroSplash")) {
-  throw new Error("Framer Motion intro animation is missing from React shell");
+if (!app.includes("framer-motion") || !app.includes("useAnimate") || !app.includes(".hero-visual")) {
+  throw new Error("Framer Motion hero reveal is missing from React shell");
+}
+
+if (!html.includes("motion-ready")) {
+  throw new Error("Motion-ready prepaint class is missing from HTML shell");
+}
+
+if (app.includes("IntroSplash")) {
+  throw new Error("Full-screen intro splash should not be present");
 }
 
 console.log("Client demo smoke test passed.");
