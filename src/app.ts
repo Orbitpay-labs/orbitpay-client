@@ -34,6 +34,8 @@ const fundingMemo = "ORBIT-1042";
 
 const views = document.querySelectorAll<HTMLElement>(".view");
 const navItems = document.querySelectorAll<HTMLElement>(".nav-item");
+const siteHeader = document.querySelector<HTMLElement>(".site-header");
+const navList = document.querySelector<HTMLElement>(".nav-list");
 
 function getElement<T extends HTMLElement>(id: string): T {
   const element = document.getElementById(id);
@@ -51,6 +53,52 @@ function showView(target: string): void {
   if (targetSection) {
     targetSection.scrollIntoView({ behavior: "smooth", block: "start" });
   }
+}
+
+if (siteHeader && navList) {
+  const menuButton = document.createElement("button");
+  menuButton.className = "mobile-menu-toggle";
+  menuButton.type = "button";
+  menuButton.setAttribute("aria-label", "Open navigation menu");
+  menuButton.setAttribute("aria-controls", "primary-navigation");
+  menuButton.setAttribute("aria-expanded", "false");
+  menuButton.innerHTML = "<span></span><span></span><span></span>";
+  navList.id = "primary-navigation";
+  siteHeader.insertBefore(menuButton, navList);
+
+  const closeMobileMenu = () => {
+    siteHeader.classList.remove("menu-open");
+    document.body.classList.remove("mobile-menu-lock");
+    menuButton.setAttribute("aria-expanded", "false");
+    menuButton.setAttribute("aria-label", "Open navigation menu");
+  };
+
+  menuButton.addEventListener("click", () => {
+    const isOpen = siteHeader.classList.toggle("menu-open");
+    document.body.classList.toggle("mobile-menu-lock", isOpen);
+    menuButton.setAttribute("aria-expanded", String(isOpen));
+    menuButton.setAttribute("aria-label", isOpen ? "Close navigation menu" : "Open navigation menu");
+  });
+
+  siteHeader.addEventListener("click", (event) => {
+    const target = event.target;
+    if (target instanceof HTMLElement && target.closest(".nav-item, .header-cta")) {
+      closeMobileMenu();
+    }
+  });
+
+  document.addEventListener("click", (event) => {
+    const target = event.target;
+    if (target instanceof Node && !siteHeader.contains(target)) {
+      closeMobileMenu();
+    }
+  });
+
+  window.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      closeMobileMenu();
+    }
+  });
 }
 
 navItems.forEach((item) => {
@@ -212,24 +260,32 @@ interface ConfettiParticle {
 function triggerConfetti() {
   const canvas = document.getElementById("confettiCanvas") as HTMLCanvasElement;
   if (!canvas) return;
+  const demoCanvas = document.querySelector<HTMLElement>(".demo-canvas");
+  if (!demoCanvas) return;
+  if (canvas.parentElement !== demoCanvas) {
+    demoCanvas.appendChild(canvas);
+  }
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
   const context = ctx;
+  const bounds = canvas.getBoundingClientRect();
+  const width = Math.max(1, Math.floor(bounds.width));
+  const height = Math.max(1, Math.floor(bounds.height));
 
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+  canvas.width = width;
+  canvas.height = height;
 
   const particles: ConfettiParticle[] = [];
   const colors = ["#8b5cf6", "#d15e7d", "#10b981", "#f59e0b", "#3b82f6"];
 
-  for (let i = 0; i < 100; i++) {
+  for (let i = 0; i < 70; i++) {
     particles.push({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height - canvas.height,
-      size: Math.random() * 7 + 4,
+      x: Math.random() * width,
+      y: Math.random() * height * 0.2 - height * 0.25,
+      size: Math.random() * 5 + 3,
       color: colors[Math.floor(Math.random() * colors.length)],
-      speedX: Math.random() * 4 - 2,
-      speedY: Math.random() * 4 + 2,
+      speedX: Math.random() * 3 - 1.5,
+      speedY: Math.random() * 3 + 1.5,
       rotation: Math.random() * 360,
       rotationSpeed: Math.random() * 6 - 3
     });
@@ -255,7 +311,7 @@ function triggerConfetti() {
       context.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
       context.restore();
 
-      if (p.y > canvas.height) {
+      if (p.y > height) {
         particles.splice(i, 1);
       }
     }
